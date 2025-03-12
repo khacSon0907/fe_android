@@ -14,7 +14,7 @@
         android:icon="@drawable/contact"
         android:title="@string/action_contact" />
     <item
-        android:id="@+id/action_"
+        android:id="@+id/action_profile"
         android:icon="@drawable/profile"
         android:title="@string/action_profile" />
 </menu>
