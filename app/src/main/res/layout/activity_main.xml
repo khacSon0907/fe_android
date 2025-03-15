@@ -8,72 +8,14 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <RelativeLayout
+
+
+    <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/bottom_navigation" >
-    </RelativeLayout>
-
-
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolBar"
-        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#FFFFFF"
-        app:logo="@drawable/categori"
-        android:theme="@style/ThemeOverlay.AppCompat.Light"
-        app:menu="@menu/menu_home">
+        android:background="@color/white"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center_horizontal">
-
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:gravity="center"
-                android:text="FADO"
-                android:textColor="@color/black"
-                android:textSize="35sp"
-                />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Premium Global E-Commerce"
-                android:textSize="14sp"
-                android:textColor="@color/black"
-                android:layout_marginTop="4dp"
-                />
-        </LinearLayout>
-    </androidx.appcompat.widget.Toolbar>
-    <!-- Thanh tìm kiếm -->
-    <androidx.appcompat.widget.SearchView
-        android:id="@+id/searchView"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_below="@id/toolBar"
-        android:layout_margin="8dp"
-        android:background="@drawable/search_background"
-        android:queryHint="Nhập link hoặc tên sản phẩm"
-        android:iconifiedByDefault="false"
-        android:paddingStart="16dp"
-
-        android:textSize="16sp"/>
-
-    <!-- Container hiển thị nội dung -->
-    <RelativeLayout
-        android:id="@+id/fragment_container2"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/searchView"
-        android:layout_above="@id/bottom_navigation"
-        />
 
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -81,7 +23,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="2dp"
         app:itemIconTint="@color/check_menu_navi"
         app:itemTextColor="@color/check_menu_navi"
         app:menu="@menu/menu_navi_botom"
