@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.view;
 
 import android.os.Bundle;
 import androidx.activity.EdgeToEdge;
@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.myapplication.R;
 import com.example.myapplication.fragments.HomeFragment;
 import com.example.myapplication.fragments.CategoryFragment;
 import com.example.myapplication.fragments.ContactsFragment;

@@ -28,6 +28,7 @@
                 app:backgroundTint="@null" />
 
             <Button
+                android:id="@+id/btnItRgt"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -92,18 +93,7 @@
             android:orientation="horizontal"
             android:layout_marginBottom="8dp">
 
-            <CheckBox
-                android:id="@+id/changeLanguageCheckBox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="false"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Change Language"
-                android:textSize="16sp"
-                android:layout_marginStart="8dp"/>
         </LinearLayout>
 
         <!-- App Info -->
@@ -113,18 +103,7 @@
             android:orientation="horizontal"
             android:layout_marginBottom="16dp">
 
-            <CheckBox
-                android:id="@+id/appInfoCheckBox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="true"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="App Info"
-                android:textSize="16sp"
-                android:layout_marginStart="8dp"/>
         </LinearLayout>
 
     </LinearLayout>
