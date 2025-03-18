@@ -1,6 +1,7 @@
 package com.example.myapplication.view.authentication;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -38,7 +39,10 @@ public class Register extends AppCompatActivity {
         btnRegister = findViewById(R.id.btnRegister);
         tvSignIn = findViewById(R.id.tvSignIn);
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
-
+        tvSignIn.setOnClickListener(v -> {
+            Intent intent = new Intent(Register.this, Login.class);
+            startActivity(intent);
+        });
         btnRegister.setOnClickListener(v -> {
             // Ẩn bàn phím
             InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
@@ -71,5 +75,6 @@ public class Register extends AppCompatActivity {
             // Gọi phương thức đăng ký từ ViewModel
             authViewModel.registerUser(registerRequest);
         });
+
     }
 }
