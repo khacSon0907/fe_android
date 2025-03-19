@@ -13,6 +13,9 @@ import android.widget.TextView;
 import android.app.AlertDialog;
 import android.widget.Toast;
 
+import androidx.appcompat.widget.Toolbar;
+
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -47,6 +50,16 @@ public class Register extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.register);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        // Hiển thị nút back
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        // Xử lý sự kiện bấm vào mũi tên back
+        toolbar.setNavigationOnClickListener(v -> onBackPressed());
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         edtMail = findViewById(R.id.edtMail);
         edtFullName = findViewById(R.id.edtFullName);
