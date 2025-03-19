@@ -7,20 +7,20 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.app.AlertDialog;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.myapplication.R;
 import com.example.myapplication.model.RegisterRequest;
 import com.example.myapplication.viewmodel.AuthViewModel;
 
-import kotlinx.coroutines.CoroutineScope;
-import kotlinx.coroutines.Dispatchers;
-
 public class Register extends AppCompatActivity {
 
-    private EditText edtMail, edtFullName, edtPhoneNumber,edtPassword,edtConfirmPassword;
+    private EditText edtMail, edtFullName, edtPhoneNumber, edtPassword, edtConfirmPassword;
     private Button btnRegister;
     private TextView tvSignIn;
     private AuthViewModel authViewModel;
@@ -39,10 +39,12 @@ public class Register extends AppCompatActivity {
         btnRegister = findViewById(R.id.btnRegister);
         tvSignIn = findViewById(R.id.tvSignIn);
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
+
         tvSignIn.setOnClickListener(v -> {
             Intent intent = new Intent(Register.this, Login.class);
             startActivity(intent);
         });
+
         btnRegister.setOnClickListener(v -> {
             // Ẩn bàn phím
             InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
@@ -51,22 +53,23 @@ public class Register extends AppCompatActivity {
             }
 
             // Lấy dữ liệu từ các trường nhập liệu
-            String email = edtMail.getText().toString();
-            String username = edtFullName.getText().toString();
-            String password = edtPassword.getText().toString();
-            String phonenumber = edtPhoneNumber.getText().toString();
+            String email = edtMail.getText().toString().trim();
 
-            // Kiểm tra dữ liệu nhập liệu
+            String username = edtFullName.getText().toString().trim();
+            String password = edtPassword.getText().toString().trim();
+            String phonenumber = edtPhoneNumber.getText().toString().trim();
+            String confirmPassword = edtConfirmPassword.getText().toString().trim();
+
+            // Kiểm tra dữ liệu nhập
             if (email.isEmpty() || username.isEmpty() || password.isEmpty() || phonenumber.isEmpty()) {
-                tvSignIn.setText("Vui lòng điền đầy đủ thông tin!");
-                return; // Dừng lại nếu thiếu thông tin
+                showAlertDialog("Lỗi", "Vui lòng điền đầy đủ thông tin!");
+                return;
             }
 
             // Kiểm tra mật khẩu và xác nhận mật khẩu
-            String confirmPassword = edtConfirmPassword.getText().toString();
             if (!password.equals(confirmPassword)) {
-                tvSignIn.setText("Mật khẩu và xác nhận mật khẩu không khớp!");
-                return; // Dừng lại nếu mật khẩu không khớp
+                showAlertDialog("Lỗi", "Mật khẩu và xác nhận mật khẩu không khớp!");
+                return;
             }
 
             // Tạo đối tượng RegisterRequest
@@ -76,5 +79,20 @@ public class Register extends AppCompatActivity {
             authViewModel.registerUser(registerRequest);
         });
 
+        authViewModel.getRegisterResult().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String result) {
+                // Hiển thị thông điệp đăng ký lên giao diện
+                Toast.makeText(Register.this, result, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    // Hàm hiển thị AlertDialog
+    private void showAlertDialog(String title, String message) {
+        new AlertDialog.Builder(this)
+                .setTitle(title)
+                .setMessage(message)
+                .show();
     }
 }
