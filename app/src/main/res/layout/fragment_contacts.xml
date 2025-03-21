@@ -1,14 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
     <TextView
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="ConTacts"
+        android:text="The shopping support team is ready assit"
         android:gravity="center"
         android:layout_gravity="center"
-        />
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:textSize="26dp"/>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp">
+
+        <CheckBox
+            android:id="@+id/checkBoxMessenger"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="Messenger"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/buttonMessenger"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:background="@color/white"
+            android:layout_marginStart="100dp"
+
+            android:text="Chat now" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp">
+
+        <CheckBox
+            android:id="@+id/checkBoxZalo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Zalo"
+            android:textSize="18sp"
+            android:layout_marginStart="8dp"/>
+
+        <Button
+            android:layout_marginRight="16dp"
+            android:id="@+id/buttonZalo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Chat now"
+            android:textColor="@color/black"
+            android:background="@color/white"
+            android:layout_marginStart="150dp"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hotline 1900 545 403"
+            android:layout_marginStart="16dp"
+            android:textSize="18sp"/>
+
+        <Button
+            android:id="@+id/buttonHotline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Call now"
+            android:background="@color/white"
+            android:textColor="@color/black"
+            android:layout_marginStart="55dp"/>
+    </LinearLayout>
 </LinearLayout>

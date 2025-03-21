@@ -59,7 +59,7 @@
                 android:textSize="14sp" />
 
             <EditText
-                android:id="@+id/etEmail"
+                android:id="@+id/edtEmail"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:hint="Nhập email"
@@ -84,7 +84,7 @@
                 android:textSize="14sp" />
 
             <EditText
-                android:id="@+id/etPassword"
+                android:id="@+id/edtPassword"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
             android:hint="Nhập mật khẩu"
