@@ -1,13 +1,14 @@
 package com.example.myapplication.view.authentication;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
+import android.content.SharedPreferences;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.annotation.Nullable;
@@ -55,23 +56,25 @@ public class Login extends AppCompatActivity {
             }
         });
 
-        btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loginUser();
-            }
-        });
+        btnLogin.setOnClickListener(v -> loginUser());
 
         authViewModel.getLoginResult().observe(this, new Observer<String>() {
             @Override
             public void onChanged(String result) {
-                Toast.makeText(Login.this, result, Toast.LENGTH_SHORT).show();
-                if (result.contains("Login successful!")) {
-                    // Chuyển đến màn hình chính sau khi đăng nhập thành công
-                    Intent intent = new Intent(Login.this, MainActivity.class);
-                    startActivity(intent);
-                    finish();
-                }
+                new AlertDialog.Builder(Login.this)
+                        .setTitle("Thông báo")
+                        .setMessage(result)
+                        .setPositiveButton("OK", (dialog, which) -> {
+                            if (result.contains("Đăng nhập thành công!")) {
+                                String email = edtEmail.getText().toString().trim();
+                                saveLoginState(email); // Lưu trạng thái đăng nhập & email
+                                Intent intent = new Intent(Login.this, MainActivity.class);
+                                startActivity(intent);
+                                finish();
+                            }
+
+                        })
+                        .show();
             }
         });
     }
@@ -81,11 +84,23 @@ public class Login extends AppCompatActivity {
         String password = edtPassword.getText().toString().trim();
 
         if (email.isEmpty() || password.isEmpty()) {
-            Toast.makeText(this, "Vui lòng điền đầy đủ thông tin!", Toast.LENGTH_SHORT).show();
+            new AlertDialog.Builder(this)
+                    .setTitle("Lỗi")
+                    .setMessage("Vui lòng điền đầy đủ thông tin!")
+                    .setPositiveButton("OK", null)
+                    .show();
             return;
         }
 
         LoginRequest loginRequest = new LoginRequest(email, password);
         authViewModel.loginUser(loginRequest);
     }
+    private void saveLoginState(String email) {
+        SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("email", email); // Lưu email tài khoản
+        editor.putBoolean("isLoggedIn", true); // Đánh dấu đã đăng nhập
+        editor.apply();
+    }
+
 }
