@@ -58,25 +58,7 @@ public class Login extends AppCompatActivity {
 
         btnLogin.setOnClickListener(v -> loginUser());
 
-        authViewModel.getLoginResult().observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(String result) {
-                new AlertDialog.Builder(Login.this)
-                        .setTitle("Thông báo")
-                        .setMessage(result)
-                        .setPositiveButton("OK", (dialog, which) -> {
-                            if (result.contains("Đăng nhập thành công!")) {
-                                String email = edtEmail.getText().toString().trim();
-                                saveLoginState(email); // Lưu trạng thái đăng nhập & email
-                                Intent intent = new Intent(Login.this, MainActivity.class);
-                                startActivity(intent);
-                                finish();
-                            }
 
-                        })
-                        .show();
-            }
-        });
     }
 
     private void loginUser() {
@@ -94,6 +76,41 @@ public class Login extends AppCompatActivity {
 
         LoginRequest loginRequest = new LoginRequest(email, password);
         authViewModel.loginUser(loginRequest);
+        authViewModel.getLoginResult().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String result) {
+                new AlertDialog.Builder(Login.this)
+                        .setTitle("Thông báo")
+                        .setMessage(result)
+                        .setPositiveButton("OK", (dialog, which) -> {
+                            if (result.contains("Đăng nhập thành công!")) {
+                                String email = edtEmail.getText().toString().trim();
+                                saveLoginState(email); // Lưu trạng thái đăng nhập & email
+                                checkUserRoleAndRedirect(email);
+                            }
+
+                        })
+                        .show();
+            }
+        });
+    }
+
+    private void checkUserRoleAndRedirect(String email) {
+        authViewModel.getUserbyEmail(email); // Gọi API lấy thông tin user theo email
+
+        authViewModel.getUserLiveData().observe(this, user -> {
+            if (user != null) {
+                if (user.getUserRole().equals("ADMIN")) {
+
+                    Intent intent = new Intent(Login.this, Admin.class);
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(Login.this, MainActivity.class);
+                    startActivity(intent);
+                }
+                finish();
+            }
+        });
     }
     private void saveLoginState(String email) {
         SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);

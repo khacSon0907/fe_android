@@ -147,8 +147,6 @@ public class ProfileFragment extends Fragment {
             if (email != null && !email.isEmpty()) {
                 authViewModel.getUserbyEmail(email); // Gọi phương thức để lấy thông tin người dùng
             }
-
-
     }
 
 }

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context="com.example.myapplication.view.ProfileAdapter">
 
-    <!-- Giao Diện Tài khoản -->
+    <!-- Giao Diện Tài khoàn lý custom giúp anh cho đẹp nha, không đẹp làm lại -->
 
     <LinearLayout
         android:id="@+id/layoutUserInfo"
@@ -99,6 +99,9 @@
 
 
     </LinearLayout>
+
+    <!-- custom trong đoàn này thui  -->
+
 
     <!-- Giao Diện Đăng nhập & Đăng ký -->
 
