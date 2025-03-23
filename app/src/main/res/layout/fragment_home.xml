@@ -1,71 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".view.MainActivity">
+    tools:context="com.example.myapplication.fragments.HomeFragment">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolBar"
+    <!-- AppBarLayout chứa Toolbar -->
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#FFFFFF"
-        app:logo="@drawable/categori"
-        android:theme="@style/ThemeOverlay.AppCompat.Light"
-        app:menu="@menu/menu_home">
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-        <LinearLayout
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center_horizontal">
+            android:background="#FFFFFF"
+            app:title="FADO"
+            app:titleTextColor="@color/black"
+            app:subtitle="Premium Global E-Commerce"
+            android:theme="@style/ThemeOverlay.AppCompat.Light"
+            app:menu="@menu/menu_home"
+            app:layout_scrollFlags="scroll|enterAlways" />
+    </com.google.android.material.appbar.AppBarLayout>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:gravity="center"
-                android:text="FADO"
-                android:textColor="@color/black"
-                android:textSize="35sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Premium Global E-Commerce"
-                android:textSize="14sp"
-                android:textColor="@color/black"
-                android:layout_marginTop="4dp" />
-        </LinearLayout>
-    </androidx.appcompat.widget.Toolbar>
-
-    <androidx.appcompat.widget.SearchView
-        android:id="@+id/searchView"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_margin="8dp"
-        android:background="@drawable/search_background"
-        android:queryHint="Nhập link hoặc tên sản phẩm"
-        android:iconifiedByDefault="false"
-        android:paddingStart="16dp"
-        android:textSize="16sp" />
-
-    <ScrollView
+    <!-- NestedScrollView chứa toàn bộ nội dung -->
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:fillViewport="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="8dp">
 
-            <!-- Thêm sản phẩm ở đây -->
+            <!-- Search View -->
+            <androidx.appcompat.widget.SearchView
+                android:id="@+id/searchView"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_margin="8dp"
+                android:background="@drawable/search_background"
+                android:queryHint="Nhập link hoặc tên sản phẩm"
+                android:iconifiedByDefault="false"
+                android:paddingStart="16dp"
+                android:textSize="16sp" />
+
+            <!-- ViewPager2 (Banner) -->
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/view_pager_2"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginBottom="8dp" />
+
+            <me.relex.circleindicator.CircleIndicator3
+                android:id="@+id/circle_indicator_3"
+                android:layout_width="wrap_content"
+                android:layout_height="5dp"
+                app:ci_drawable="@drawable/bg_indicator"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <!-- RecyclerView hiển thị sản phẩm -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:nestedScrollingEnabled="false"
+                android:overScrollMode="never"
+                android:padding="8dp"
+                tools:listitem="@layout/item_product_user" />
 
         </LinearLayout>
-    </ScrollView>
-</LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
