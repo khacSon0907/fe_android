@@ -1,6 +1,8 @@
 package com.example.myapplication.fragments;
 
 
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -14,13 +16,18 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.R;
 import com.example.myapplication.model.ProfileOption;
+import com.example.myapplication.model.ResponLogin;
+import com.example.myapplication.model.User;
+import com.example.myapplication.view.MainActivity;
 import com.example.myapplication.view.customAdapter.ProfileAdapter;
 import com.example.myapplication.view.authentication.Login;
 import com.example.myapplication.view.authentication.Register;
@@ -36,11 +43,12 @@ public class ProfileFragment extends Fragment {
     private ProfileAdapter adapter;
     private List<ProfileOption> options;
 
-    private Button btn_login, btn_register, btnLogout;
+    private Button btn_login, btn_register, btnLogout,btnUpgradeVIP;
     private TextView tvUserEmail, tvUserName;
 
-    private LinearLayout layoutAuth, layoutUserInfo;
-
+    private LinearLayout layoutAuth ,quick_buttons;
+    private CardView  cardView ,cardWallet;
+    @SuppressLint("MissingInflatedId")
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -52,8 +60,13 @@ public class ProfileFragment extends Fragment {
         btn_register = view.findViewById(R.id.btn_register);
         btnLogout = view.findViewById(R.id.btnLogout);
 
+        cardWallet = view.findViewById(R.id.cardWallet);
+        cardView = view.findViewById(R.id.cardView);
         layoutAuth = view.findViewById(R.id.layoutAuth);
-        layoutUserInfo = view.findViewById(R.id.layoutUserInfo);
+        btnUpgradeVIP = view.findViewById(R.id.btnUpgradeVIP);
+        quick_buttons = view.findViewById(R.id.quick_buttons);
+// Nếu bạn muốn hiển thị thông tin người dùng
+
         tvUserEmail = view.findViewById(R.id.tvUserEmail);
         tvUserName = view.findViewById(R.id.tvUserName);
 
@@ -99,7 +112,10 @@ public class ProfileFragment extends Fragment {
 
 
             layoutAuth.setVisibility(View.VISIBLE); // Hiện giao diện đăng nhập
-            layoutUserInfo.setVisibility(View.GONE); // Ẩn thông tin user
+            quick_buttons.setVisibility(View.GONE); // Ẩn thông tin user
+            cardView.setVisibility(View.GONE);
+            btnUpgradeVIP.setVisibility(View.GONE);
+            cardWallet.setVisibility(View.GONE);
         });
         checkLoginStatus();
 
@@ -109,7 +125,10 @@ public class ProfileFragment extends Fragment {
                 // Cập nhật thông tin người dùng vào UI
                 tvUserName.setText("Name: " + user.getUsername());
                 layoutAuth.setVisibility(View.GONE);
-                layoutUserInfo.setVisibility(View.VISIBLE);
+                quick_buttons.setVisibility(View.VISIBLE);
+                cardView.setVisibility(View.VISIBLE);
+                btnUpgradeVIP.setVisibility(View.VISIBLE);
+                cardWallet.setVisibility(View.VISIBLE);
             } else {
                 tvUserEmail.setText("Thông tin người dùng không có sẵn.");
             }
@@ -124,23 +143,29 @@ public class ProfileFragment extends Fragment {
 
         if (isLoggedIn) {
             layoutAuth.setVisibility(View.GONE); // Ẩn giao diện đăng ký/đăng nhập
-            layoutUserInfo.setVisibility(View.VISIBLE); // Hiện giao diện user
+            quick_buttons.setVisibility(View.VISIBLE);
+            cardView.setVisibility(View.VISIBLE);
+            btnUpgradeVIP.setVisibility(View.VISIBLE);
+            cardWallet.setVisibility(View.VISIBLE);; // Hiện giao diện user
 
             tvUserEmail.setText("Email: " + email);
 
             getUserData(email);
         } else {
             layoutAuth.setVisibility(View.VISIBLE);
-            layoutUserInfo.setVisibility(View.GONE);
+            quick_buttons.setVisibility(View.GONE); // Ẩn thông tin user
+            cardView.setVisibility(View.GONE);
+            btnUpgradeVIP.setVisibility(View.GONE);
+            cardWallet.setVisibility(View.GONE);
 
         }
     }
 
     private void getUserData(String email) {
 
-            if (email != null && !email.isEmpty()) {
-                authViewModel.getUserbyEmail(email); // Gọi phương thức để lấy thông tin người dùng
-            }
+        if (email != null && !email.isEmpty()) {
+            authViewModel.getUserbyEmail(email); // Gọi phương thức để lấy thông tin người dùng
+        }
     }
 
 }
