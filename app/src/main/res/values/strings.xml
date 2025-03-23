@@ -4,4 +4,11 @@
     <string name="action_category">Category</string>
     <string name="action_contact">Contact Us</string>
     <string name="action_profile">Profile</string>
+        <string-array name="category_options">
+            <item>Chọn loại sản phẩm</item>
+            <item>Quần</item>
+            <item>Áo</item>
+            <item>Giày</item>
+            <item>Dép</item>
+        </string-array>
 </resources>

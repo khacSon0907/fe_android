@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.myapplication.view.ProfileAdapter">
+    tools:context="com.example.myapplication.view.customAdapter.ProfileAdapter">
 
     <!-- Giao Diện Tài khoàn lý custom giúp anh cho đẹp nha, không đẹp làm lại -->
 
