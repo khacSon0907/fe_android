@@ -71,12 +71,16 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:nestedScrollingEnabled="false"
                 android:overScrollMode="never"
-                android:padding="8dp"
-                tools:listitem="@layout/item_product_user" />
-
+                android:clipToPadding="false"
+                android:layout_marginBottom="80dp"
+                android:clipChildren="false"
+                android:paddingBottom="16dp"
+                android:focusable="true"
+                android:descendantFocusability="blocksDescendants"
+                tools:listitem="@layout/item_product_user"/>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 

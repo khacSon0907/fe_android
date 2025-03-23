@@ -7,7 +7,7 @@
 
 
     <TextView
-        android:id="@+id/tv_selected"
+        android:id="@+id/tv_selected_brand"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:padding="15dp"
@@ -17,10 +17,10 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.065"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.023"
+        app:layout_constraintVertical_bias="0.0"
         tools:ignore="MissingConstraints" />
 
     <ImageView
@@ -31,8 +31,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.932"
-        app:layout_constraintStart_toStartOf="@+id/tv_selected"
-        app:layout_constraintTop_toTopOf="@+id/tv_selected"
+        app:layout_constraintStart_toStartOf="@+id/tv_selected_brand"
+        app:layout_constraintTop_toTopOf="@+id/tv_selected_brand"
         app:layout_constraintVertical_bias="0.027" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

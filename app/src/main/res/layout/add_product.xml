@@ -93,10 +93,10 @@
         android:background="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/editText"
-        app:layout_constraintVertical_bias="0.269"
+        app:layout_constraintVertical_bias="0.338"
         tools:ignore="MissingConstraints" />
 
     <ImageView
@@ -107,10 +107,10 @@
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.029"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/editText"
-        app:layout_constraintVertical_bias="0.394" />
+        app:layout_constraintVertical_bias="0.508" />
 
     <TextView
         android:id="@+id/textView4"
