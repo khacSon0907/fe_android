@@ -1,5 +1,6 @@
 package com.example.myapplication.view.customAdapter;
 
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,70 +9,71 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.BaseAdapter;
-
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+import com.bumptech.glide.Glide;
 import com.example.myapplication.R;
-import com.example.myapplication.model.Product;
+import com.example.myapplication.model.ProductAdmin;
+import java.util.List;
 
-import java.util.ArrayList;
-
-public class ProductAdapter extends BaseAdapter {
+public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
     private Context context;
-    private ArrayList<Product> productList;
+    private List<ProductAdmin> productList;
 
-    public ProductAdapter(Context context, ArrayList<Product> productList) {
+    public ProductAdapter(Context context, List<ProductAdmin> productList) {
         this.context = context;
         this.productList = productList;
     }
 
+    @NonNull
     @Override
-    public int getCount() {
+    public ProductViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(context).inflate(R.layout.item_product, parent, false);
+        return new ProductViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
+        ProductAdmin product = productList.get(position);
+        holder.productName.setText(product.getName());
+        holder.productPrice.setText(product.getPrice() + " VNĐ");
+
+        // Load ảnh từ API
+        Glide.with(context)
+                .load("http://10.0.2.2:8080" + product.getImageUrl())
+                .placeholder(R.drawable.product1)
+                .error(R.drawable.product2)
+                .into(holder.productImage);
+
+        // Xử lý nút Sửa
+        holder.btnEdit.setOnClickListener(v ->
+                Toast.makeText(context, "Sửa sản phẩm: " + product.getName(), Toast.LENGTH_SHORT).show());
+
+        // Xử lý nút Xóa
+        holder.btnDelete.setOnClickListener(v -> {
+            productList.remove(position);
+            notifyDataSetChanged();
+            Toast.makeText(context, "Xóa sản phẩm: " + product.getName(), Toast.LENGTH_SHORT).show();
+        });
+    }
+
+    @Override
+    public int getItemCount() {
         return productList.size();
     }
 
-    @Override
-    public Object getItem(int position) {
-        return productList.get(position);
-    }
+    public static class ProductViewHolder extends RecyclerView.ViewHolder {
+        ImageView productImage;
+        TextView productName, productPrice;
+        Button btnEdit, btnDelete;
 
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        if (convertView == null) {
-            convertView = LayoutInflater.from(context).inflate(R.layout.item_product, parent, false);
+        public ProductViewHolder(@NonNull View itemView) {
+            super(itemView);
+            productImage = itemView.findViewById(R.id.productImage);
+            productName = itemView.findViewById(R.id.productName);
+            productPrice = itemView.findViewById(R.id.productPrice);
+            btnEdit = itemView.findViewById(R.id.btnEdit);
+            btnDelete = itemView.findViewById(R.id.btnDelete);
         }
-
-        // Lấy dữ liệu của sản phẩm
-        Product product = productList.get(position);
-
-        // Ánh xạ UI
-        ImageView productImage = convertView.findViewById(R.id.productImage);
-        TextView productName = convertView.findViewById(R.id.productName);
-        TextView productPrice = convertView.findViewById(R.id.productPrice);
-        Button btnEdit = convertView.findViewById(R.id.btnEdit);
-        Button btnDelete = convertView.findViewById(R.id.btnDelete);
-
-        // Set dữ liệu vào giao diện
-        productImage.setImageResource(product.getImageResource());
-        productName.setText(product.getName());
-        productPrice.setText(product.getPrice() + " VNĐ");
-
-        // Xử lý sự kiện nút Sửa
-        btnEdit.setOnClickListener(v -> {
-            Toast.makeText(context, "Sửa sản phẩm: " + product.getName(), Toast.LENGTH_SHORT).show();
-        });
-
-        // Xử lý sự kiện nút Xóa
-        btnDelete.setOnClickListener(v -> {
-            productList.remove(position); // Xóa sản phẩm khỏi danh sách
-            notifyDataSetChanged(); // Cập nhật lại danh sách
-            Toast.makeText(context, "Xóa sản phẩm: " + product.getName(), Toast.LENGTH_SHORT).show();
-        });
-
-        return convertView;
     }
 }

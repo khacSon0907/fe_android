@@ -87,6 +87,26 @@ public class ProductViewModel extends AndroidViewModel {
             }
         });
     }
+    // Gọi API để lấy danh sách sản phẩm
+    public void fetchProducts() {
+        ApiService apiService = ApiClient.getClient().create(ApiService.class);
+        Call<List<ProductAdmin>> call = apiService.getProducts();
 
+        call.enqueue(new Callback<List<ProductAdmin>>() {
+            @Override
+            public void onResponse(Call<List<ProductAdmin>> call, Response<List<ProductAdmin>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    productListLiveData.setValue(response.body());
+                } else {
+                    errorMessageLiveData.setValue("Lỗi khi lấy dữ liệu sản phẩm.");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<ProductAdmin>> call, Throwable t) {
+                errorMessageLiveData.setValue("Lỗi kết nối: " + t.getMessage());
+            }
+        });
+    }
 
 }

@@ -7,6 +7,7 @@ import com.example.myapplication.respone.ResponLogin;
 import com.example.myapplication.respone.ResponseWrapper;
 
 
+import java.util.List;
 import java.util.Map;
 
 import okhttp3.MultipartBody;
@@ -39,5 +40,6 @@ public interface ApiService {
             @Part("category") RequestBody category,
             @Part("brand") RequestBody brand
     );
-
+    @GET("/api/products")
+    Call<List<ProductAdmin>> getProducts();
 }
