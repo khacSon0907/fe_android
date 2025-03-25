@@ -52,7 +52,8 @@ public class Admin extends AppCompatActivity {
             finish(); // Kết thúc activity hiện tại
         });
 
-        ArrayAdapter arrayAdapter = new ArrayAdapter(Admin.this, android.R.layout.simple_list_item_1,listNameQl);
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(Admin.this, R.layout.item_admin_qlsp, R.id.txtItem, listNameQl);
+
 
         lisviewQladmin.setAdapter(arrayAdapter);
 

@@ -19,6 +19,7 @@
         android:background="@color/black"
         android:gravity="center"
         android:text="QUẢN LÝ SẢN PHẨM"
+        android:navigationIcon="@drawable/ic_arrow_back"
         android:textColor="@color/white"
         android:textSize="20dp"
         android:textStyle="bold"
@@ -28,6 +29,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.076" />
+    <ImageView
+        android:id="@+id/btnBack"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/ic_arrow_back"
+        app:tint="@color/white"
+        android:contentDescription="Back"
+        android:padding="8dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textView2"
+        app:layout_constraintBottom_toBottomOf="@+id/textView2"
+        android:background="?attr/selectableItemBackgroundBorderless" />
+
 
     <SearchView
         android:id="@+id/searchView"
