@@ -18,6 +18,7 @@ import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
 
@@ -46,4 +47,16 @@ public interface ApiService {
 
     @DELETE("api/products/delete/{id}")
     Call<Map<String, String>> deleteProduct(@Path("id") String id);
+
+    @Multipart
+    @PUT("api/products/update/{id}")
+    Call<ResponseWrapper<ProductAdmin>> updateProduct(
+            @Path("id") String id,
+            @Part("name") RequestBody name,
+            @Part MultipartBody.Part image,
+            @Part("price") RequestBody price,
+            @Part("description") RequestBody description,
+            @Part("category") RequestBody category,
+            @Part("brand") RequestBody brand
+    );
 }

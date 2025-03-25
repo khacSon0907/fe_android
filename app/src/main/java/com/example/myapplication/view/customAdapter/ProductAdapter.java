@@ -2,6 +2,7 @@ package com.example.myapplication.view.customAdapter;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +15,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.myapplication.R;
 import com.example.myapplication.model.ProductAdmin;
+import com.example.myapplication.view.authentication.AddProductActivity;
+
 import java.util.List;
+import java.text.DecimalFormat;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
 
@@ -43,7 +47,9 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
         ProductAdmin product = productList.get(position);
         holder.productName.setText(product.getName());
-        holder.productPrice.setText(product.getPrice() + " VNĐ");
+        DecimalFormat decimalFormat = new DecimalFormat("#,###");
+        String formattedPrice = decimalFormat.format(product.getPrice());
+        holder.productPrice.setText(formattedPrice + " VNĐ");
 
         Glide.with(context)
                 .load("http://10.0.2.2:8080" + product.getImageUrl())
@@ -51,11 +57,22 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
                 .error(R.drawable.product2)
                 .into(holder.productImage);
 
-        holder.btnEdit.setOnClickListener(v ->
-                Toast.makeText(context, "Sửa sản phẩm: " + product.getName(), Toast.LENGTH_SHORT).show());
+
 
         holder.btnDelete.setOnClickListener(v -> {
             deleteListener.onProductDelete(product.getId()); // Gọi interface để xóa
+        });
+        holder.btnEdit.setOnClickListener(v -> {
+            Intent intent = new Intent(context, AddProductActivity.class);
+            intent.putExtra("edit_mode", true); // bật chế độ chỉnh sửa
+            intent.putExtra("product_id", product.getId());
+            intent.putExtra("product_name", product.getName());
+            intent.putExtra("product_price", product.getPrice());
+            intent.putExtra("product_desc", product.getDescription());
+            intent.putExtra("product_category", product.getCategory());
+            intent.putExtra("product_brand", product.getBrand());
+            intent.putExtra("product_image", product.getImageUrl());
+            context.startActivity(intent);
         });
     }
 

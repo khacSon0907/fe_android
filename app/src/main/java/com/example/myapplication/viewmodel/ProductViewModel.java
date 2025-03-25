@@ -132,5 +132,38 @@ public class ProductViewModel extends AndroidViewModel {
             }
         });
     }
+    public void updateProduct(String id, ProductAdmin product, File imageFile) {
+        ApiService apiService = ApiClient.getClient().create(ApiService.class);
+
+        RequestBody name = RequestBody.create(MediaType.parse("text/plain"), product.getName());
+        RequestBody price = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(product.getPrice()));
+        RequestBody description = RequestBody.create(MediaType.parse("text/plain"), product.getDescription());
+        RequestBody category = RequestBody.create(MediaType.parse("text/plain"), product.getCategory());
+        RequestBody brand = RequestBody.create(MediaType.parse("text/plain"), product.getBrand());
+
+        MultipartBody.Part imagePart = null;
+        if (imageFile != null) {
+            RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), imageFile);
+            imagePart = MultipartBody.Part.createFormData("image", imageFile.getName(), reqFile);
+        }
+
+        Call<ResponseWrapper<ProductAdmin>> call = apiService.updateProduct(id, name, imagePart, price, description, category, brand);
+
+        call.enqueue(new Callback<ResponseWrapper<ProductAdmin>>() {
+            @Override
+            public void onResponse(Call<ResponseWrapper<ProductAdmin>> call, Response<ResponseWrapper<ProductAdmin>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    successMessageLiveData.setValue("Cập nhật sản phẩm thành công!");
+                } else {
+                    errorMessageLiveData.setValue("Lỗi cập nhật: " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseWrapper<ProductAdmin>> call, Throwable t) {
+                errorMessageLiveData.setValue("Lỗi kết nối: " + t.getMessage());
+            }
+        });
+    }
 
 }

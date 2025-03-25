@@ -12,16 +12,19 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.myapplication.R;
 import com.example.myapplication.model.Product;
+import com.example.myapplication.model.ProductAdmin;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class UserProductAdapter extends RecyclerView.Adapter<UserProductAdapter.ViewHolder> {
     private Context context;
-    private List<Product> productList;
+    private List<ProductAdmin> productList;
 
-    public UserProductAdapter(Context context, List<Product> productList) {
+    public UserProductAdapter(Context context, List<ProductAdmin> productList) {
         this.context = context;
         this.productList = productList;
     }
@@ -35,12 +38,18 @@ public class UserProductAdapter extends RecyclerView.Adapter<UserProductAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Product product = productList.get(position);
+        ProductAdmin product = productList.get(position);
 
-        // Hiển thị dữ liệu sản phẩm
-        holder.productImage.setImageResource(product.getImageResource());
         holder.productName.setText(product.getName());
-        holder.productPrice.setText(product.getPrice() + " VNĐ");
+        DecimalFormat decimalFormat = new DecimalFormat("#,###");
+        String formattedPrice = decimalFormat.format(product.getPrice());
+        holder.productPrice.setText(formattedPrice + " VNĐ");
+
+        Glide.with(context)
+                .load("http://10.0.2.2:8080" + product.getImageUrl())
+                .placeholder(R.drawable.product1)
+                .error(R.drawable.product2)
+                .into(holder.productImage);
     }
 
     @Override

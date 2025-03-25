@@ -10,6 +10,7 @@ import android.widget.Toast;
 import androidx.appcompat.widget.Toolbar; // Import đúng
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
@@ -18,10 +19,12 @@ import com.example.myapplication.R;
 import com.example.myapplication.model.Product;
 import com.example.myapplication.model.Photo;
 import com.example.myapplication.model.PhotoViewPager2Adapter;
+import com.example.myapplication.model.ProductAdmin;
 import com.example.myapplication.view.CartActivity;
 import com.example.myapplication.view.ProfileActivity;
 import com.example.myapplication.view.customAdapter.ProductAdapter;
 import com.example.myapplication.view.customAdapter.UserProductAdapter;
+import com.example.myapplication.viewmodel.ProductViewModel;
 
 
 import java.util.ArrayList;
@@ -33,64 +36,56 @@ public class HomeFragment extends Fragment {
 
     private ViewPager2 mViewPager2;
     private CircleIndicator3 mCircleIndicator3;
-    private List<Photo> mListPhoto;
     private RecyclerView recyclerView;
 
     private UserProductAdapter userProductAdapter;
-    private List<Product> productList;
-
+    private List<ProductAdmin> productList = new ArrayList<>();
+    private ProductViewModel productViewModel;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
+
         Toolbar toolbar = view.findViewById(R.id.toolBar);
         toolbar.setOnMenuItemClickListener(item -> {
             if (item.getItemId() == R.id.menu_cart) {
-                Intent intent = new Intent(getActivity(), CartActivity.class);
-                startActivity(intent);
+                startActivity(new Intent(getActivity(), CartActivity.class));
                 return true;
             }
             return false;
         });
 
-
-        toolbar.setOnMenuItemClickListener(item -> {
-            if (item.getItemId() == R.id.menu_cart) {
-                Intent intent = new Intent(getActivity(), CartActivity.class);
-                startActivity(intent);
-                return true; }
-
-            return false;
-        });
-        // Ánh xạ ViewPager2 và CircleIndicator3
-
+        // Banner slider
         mViewPager2 = view.findViewById(R.id.view_pager_2);
         mCircleIndicator3 = view.findViewById(R.id.circle_indicator_3);
-
-        // Khởi tạo danh sách ảnh
-        mListPhoto = getListPhoto();
-        PhotoViewPager2Adapter adapter = new PhotoViewPager2Adapter(mListPhoto);
-
-        // Thiết lập Adapter cho ViewPager2
+        PhotoViewPager2Adapter adapter = new PhotoViewPager2Adapter(getListPhoto());
         mViewPager2.setAdapter(adapter);
-
-        // Kết nối CircleIndicator3 với ViewPager2
         mCircleIndicator3.setViewPager(mViewPager2);
-        recyclerView = view.findViewById(R.id.recyclerView);
 
-        // Chia danh sách sản phẩm thành 2 cột
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
+        // RecyclerView sản phẩm
+        recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
-        recyclerView.setNestedScrollingEnabled(false);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setItemViewCacheSize(20); // Tăng bộ nhớ cache để tránh lỗi hiển thị
-        gridLayoutManager.setAutoMeasureEnabled(true);
-        productList = getProductList();
+        recyclerView.setNestedScrollingEnabled(false);
+
         userProductAdapter = new UserProductAdapter(getContext(), productList);
         recyclerView.setAdapter(userProductAdapter);
-        return view;
 
+        // ViewModel
+        productViewModel = new ViewModelProvider(this).get(ProductViewModel.class);
+        productViewModel.getProductList().observe(getViewLifecycleOwner(), products -> {
+            productList.clear();
+            productList.addAll(products);
+            userProductAdapter.notifyDataSetChanged();
+        });
+
+        productViewModel.getErrorMessage().observe(getViewLifecycleOwner(), err ->
+                Toast.makeText(getContext(), err, Toast.LENGTH_SHORT).show());
+
+        productViewModel.fetchProducts(); // Gọi API
+
+        return view;
     }
 
     private List<Photo> getListPhoto() {
@@ -99,20 +94,6 @@ public class HomeFragment extends Fragment {
         list.add(new Photo(R.drawable.img_2));
         list.add(new Photo(R.drawable.img_3));
         list.add(new Photo(R.drawable.img_4));
-        return list;
-    }
-    private List<Product> getProductList() {
-        List<Product> list = new ArrayList<>();
-        list.add(new Product("Sản phẩm 1", 100000, R.drawable.product1));
-        list.add(new Product("Sản phẩm 2", 200000, R.drawable.product2));
-        list.add(new Product("Sản phẩm 3", 300000, R.drawable.product3));
-        list.add(new Product("Sản phẩm 4", 200000, R.drawable.img_4));
-        list.add(new Product("Sản phẩm 5", 700000, R.drawable.img_1));
-        list.add(new Product("Sản phẩm 6", 900000, R.drawable.img_2));
-        list.add(new Product("Sản phẩm 5", 700000, R.drawable.img_1));
-        list.add(new Product("Sản phẩm 6", 900000, R.drawable.img_2));
-        list.add(new Product("Sản phẩm 5", 700000, R.drawable.img_1));
-        list.add(new Product("Sản phẩm 6", 900000, R.drawable.img_2));
         return list;
     }
 }

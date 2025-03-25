@@ -21,6 +21,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.bumptech.glide.Glide;
 import com.example.myapplication.R;
 import com.example.myapplication.model.ProductAdmin;
 import com.example.myapplication.view.customAdapter.Brands;
@@ -45,7 +46,8 @@ public class AddProductActivity extends AppCompatActivity {
     private EditText edtTenSanPham, edtGiaSanPham, edtMoTaSp;
     private Button btn_save, btnUpload,btn_back;
     private ProductViewModel productViewModel;
-
+    private boolean isEditMode = false;
+    private String productId = null;
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +91,28 @@ public class AddProductActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+
+
+        Intent intent = getIntent();
+        isEditMode = intent.getBooleanExtra("edit_mode", false);
+
+        if (isEditMode) {
+            productId = intent.getStringExtra("product_id");
+            edtTenSanPham.setText(intent.getStringExtra("product_name"));
+            edtGiaSanPham.setText(String.valueOf(intent.getDoubleExtra("product_price", 0)));
+            edtMoTaSp.setText(intent.getStringExtra("product_desc"));
+
+            // Set category + brand (nếu muốn khớp spinner bạn có thể xử lý thêm)
+
+            // Load ảnh từ server nếu cần
+            String imageUrl = intent.getStringExtra("product_image");
+            Glide.with(this)
+                    .load("http://10.0.2.2:8080" + imageUrl)
+                    .placeholder(R.drawable.product1)
+                    .error(R.drawable.product2)
+                    .into(imageView);
+        }
     }
 
     // Mở thư viện để chọn ảnh
@@ -123,23 +147,30 @@ public class AddProductActivity extends AppCompatActivity {
         String category = selectedCategory.getName();
         String brand = selectedBrand.getName();
 
-        if (name.isEmpty() || price.isEmpty() || description.isEmpty() || imageUri == null) {
+        if (name.isEmpty() || price.isEmpty() || description.isEmpty()) {
             Toast.makeText(this, "Vui lòng điền đầy đủ thông tin.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Lấy đường dẫn ảnh
-        String imagePath = getRealPathFromURI(imageUri);
-        if (imagePath == null) {
-            Toast.makeText(this, "Lỗi lấy đường dẫn ảnh", Toast.LENGTH_SHORT).show();
-            return;
+        File imageFile = null;
+        if (imageUri != null) {
+            String imagePath = getRealPathFromURI(imageUri);
+            if (imagePath != null) {
+                imageFile = new File(imagePath);
+            }
         }
 
-        File imageFile = new File(imagePath);
-        ProductAdmin product =  new ProductAdmin(name, Double.parseDouble(price), description, category, brand);
+        ProductAdmin product = new ProductAdmin(name, Double.parseDouble(price), description, category, brand);
 
-        // Gửi sản phẩm đến ViewModel để xử lý
-        productViewModel.createProduct(product, imageFile);
+        if (isEditMode) {
+            productViewModel.updateProduct(productId, product, imageFile); // Gọi API cập nhật
+        } else {
+            if (imageFile == null) {
+                Toast.makeText(this, "Vui lòng chọn ảnh.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            productViewModel.createProduct(product, imageFile); // Gọi API thêm mới
+        }
     }
 
     // Hiển thị thông báo thành công
@@ -148,11 +179,13 @@ public class AddProductActivity extends AppCompatActivity {
                 .setTitle("Thành công")
                 .setMessage(message)
                 .setPositiveButton("OK", (dialog, which) -> {
-                    dialog.dismiss();
-                    finish(); // Đóng Activity sau khi tạo sản phẩm thành công
+                    Intent intent = new Intent(AddProductActivity.this, AdminQlsp.class);
+                    startActivity(intent);
+                    finish(); // Nếu muốn đóng luôn AddProductActivity
                 })
                 .show();
     }
+
 
     // Lấy danh sách loại sản phẩm
     private List<Category> getListCategory() {
