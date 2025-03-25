@@ -10,12 +10,12 @@
         app:showAsAction="ifRoom"
         />
     <item
-        android:id="@+id/action_call"
+        android:id="@+id/menu_cart"
         android:icon="@drawable/logo_onbording"
         android:title="Giỏ hàng"
         app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/action_video"
+        android:id="@+id/menu_profile"
         android:icon="@drawable/profile"
         android:title="Đăng nhập"
         app:showAsAction="ifRoom" />

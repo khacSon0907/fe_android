@@ -1,4 +1,6 @@
-package com.example.myapplication.model;
+package com.example.myapplication.respone;
+
+import com.example.myapplication.model.User;
 
 public class ResponLogin {
 

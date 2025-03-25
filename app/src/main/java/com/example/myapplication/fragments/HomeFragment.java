@@ -1,11 +1,13 @@
 package com.example.myapplication.fragments;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+import androidx.appcompat.widget.Toolbar; // Import đúng
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -16,6 +18,8 @@ import com.example.myapplication.R;
 import com.example.myapplication.model.Product;
 import com.example.myapplication.model.Photo;
 import com.example.myapplication.model.PhotoViewPager2Adapter;
+import com.example.myapplication.view.CartActivity;
+import com.example.myapplication.view.ProfileActivity;
 import com.example.myapplication.view.customAdapter.ProductAdapter;
 import com.example.myapplication.view.customAdapter.UserProductAdapter;
 
@@ -40,7 +44,25 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
+        Toolbar toolbar = view.findViewById(R.id.toolBar);
+        toolbar.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.menu_cart) {
+                Intent intent = new Intent(getActivity(), CartActivity.class);
+                startActivity(intent);
+                return true;
+            }
+            return false;
+        });
 
+
+        toolbar.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.menu_cart) {
+                Intent intent = new Intent(getActivity(), CartActivity.class);
+                startActivity(intent);
+                return true; }
+
+            return false;
+        });
         // Ánh xạ ViewPager2 và CircleIndicator3
 
         mViewPager2 = view.findViewById(R.id.view_pager_2);

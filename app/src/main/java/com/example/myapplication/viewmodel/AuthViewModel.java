@@ -8,7 +8,7 @@ import com.example.myapplication.api.ApiClient;
 import com.example.myapplication.api.ApiService;
 import com.example.myapplication.model.LoginRequest;
 import com.example.myapplication.model.RegisterRequest;
-import com.example.myapplication.model.ResponLogin;
+import com.example.myapplication.respone.ResponLogin;
 import com.example.myapplication.model.User;
 
 import org.json.JSONException;

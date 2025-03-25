@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="5dp"
+    android:weightSum="10">
+
+    <!-- Cột hình ảnh sản phẩm -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="3"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/imageViewProduct"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:adjustViewBounds="true"
+            android:layout_margin="5dp"/>
+    </LinearLayout>
+
+    <!-- Cột thông tin sản phẩm -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="7"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_margin="5dp">
+
+        <TextView
+            android:id="@+id/textviewProductName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tên sản phẩm"
+            android:textSize="20sp"
+            android:textColor="#10100f" />
+
+        <TextView
+            android:id="@+id/textviewProductPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:text="Giá sản phẩm"
+            android:textColor="#f20"
+            android:textSize="15sp" />
+
+        <!-- Cột tăng/giảm số lượng -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/buttonminus"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:text="-"
+                android:textSize="30dp"
+                android:textColor="#FFFFFF"
+                android:backgroundTint="#000000"
+                android:layout_margin="5dp"/>
+
+            <TextView
+                android:id="@+id/textviewQuantity"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:text="1"
+                android:textSize="30dp"
+                android:gravity="center"
+                android:layout_marginTop="5dp"/>
+
+            <Button
+                android:id="@+id/buttonplus"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:text="+"
+                android:textSize="30dp"
+                android:textColor="#FFFFFF"
+                android:backgroundTint="#000000"
+                android:layout_margin="5dp"/>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
