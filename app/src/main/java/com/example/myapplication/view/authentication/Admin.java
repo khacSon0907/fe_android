@@ -1,5 +1,6 @@
 package com.example.myapplication.view.authentication;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -14,28 +15,39 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.myapplication.R;
+import com.example.myapplication.view.MainActivity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Admin extends AppCompatActivity {
 
-    private Button btnLogout,btnAdd ;
+    private Button btnLogout,btnAdd ,btn_nextHome;
     private EditText editAdd;
 
     private ListView lisviewQladmin;
     private ArrayList<String> listNameQl = new ArrayList<>(Arrays.asList("QUẢN LÝ SẢN PHẨM","QUẢN LÝ HOÁ ĐƠN","QUẢN LÝ TÀI KHOẢN"));
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.admin);
 
-
+        btn_nextHome = findViewById(R.id.btn_nextHome);
         editAdd = findViewById(R.id.editAdd);
         btnAdd = findViewById(R.id.btnAdd);
         lisviewQladmin = findViewById(R.id.lisviewQladmin);
         btnLogout = findViewById(R.id.btnLogout);
+
+
+        btn_nextHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Admin.this, MainActivity.class);
+                startActivity(intent);
+            }
+        });
         btnLogout.setOnClickListener(v -> {
             Toast.makeText(Admin.this, "Đăng xuất thành công", Toast.LENGTH_SHORT).show();
 

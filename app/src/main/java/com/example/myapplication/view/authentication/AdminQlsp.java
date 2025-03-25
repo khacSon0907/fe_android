@@ -18,39 +18,34 @@ import com.example.myapplication.viewmodel.ProductViewModel;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AdminQlsp extends AppCompatActivity {
+public class AdminQlsp extends AppCompatActivity implements ProductAdapter.OnProductDeleteListener {
     private RecyclerView recyclerView;
     private ProductAdapter adapter;
     private List<ProductAdmin> productList = new ArrayList<>();
     private ProductViewModel productViewModel;
-
     private Button btnAddProduct;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.admin_qlsp);
+
         ImageView btnBack = findViewById(R.id.btnBack);
         btnBack.setOnClickListener(v -> onBackPressed());
 
         recyclerView = findViewById(R.id.listviewProduct);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         btnAddProduct = findViewById(R.id.btnAddProduct);
-        adapter = new ProductAdapter(this, productList);
+
+        adapter = new ProductAdapter(this, productList, this); // this là Listener
         recyclerView.setAdapter(adapter);
 
-
-        btnAddProduct.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(AdminQlsp.this,AddProductActivity.class);
-                startActivity(intent);
-            }
-        });
+        btnAddProduct.setOnClickListener(v ->
+                startActivity(new Intent(AdminQlsp.this, AddProductActivity.class)));
 
         productViewModel = new ViewModelProvider(this).get(ProductViewModel.class);
-        productViewModel.getProductList().observe(this, products -> {
 
+        productViewModel.getProductList().observe(this, products -> {
             productList.clear();
             productList.addAll(products);
             adapter.notifyDataSetChanged();
@@ -59,7 +54,14 @@ public class AdminQlsp extends AppCompatActivity {
         productViewModel.getErrorMessage().observe(this, errorMsg ->
                 Toast.makeText(AdminQlsp.this, errorMsg, Toast.LENGTH_SHORT).show());
 
-        // Gọi API để lấy danh sách sản phẩm
+        productViewModel.getSuccessMessage().observe(this, successMsg ->
+                Toast.makeText(AdminQlsp.this, successMsg, Toast.LENGTH_SHORT).show());
+
         productViewModel.fetchProducts();
+    }
+
+    @Override
+    public void onProductDelete(String productId) {
+        productViewModel.deleteProduct(productId);
     }
 }

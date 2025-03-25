@@ -17,12 +17,19 @@ import com.example.myapplication.model.ProductAdmin;
 import java.util.List;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
+
+    public interface OnProductDeleteListener {
+        void onProductDelete(String productId);
+    }
+
     private Context context;
     private List<ProductAdmin> productList;
+    private OnProductDeleteListener deleteListener;
 
-    public ProductAdapter(Context context, List<ProductAdmin> productList) {
+    public ProductAdapter(Context context, List<ProductAdmin> productList, OnProductDeleteListener listener) {
         this.context = context;
         this.productList = productList;
+        this.deleteListener = listener;
     }
 
     @NonNull
@@ -38,22 +45,17 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         holder.productName.setText(product.getName());
         holder.productPrice.setText(product.getPrice() + " VNĐ");
 
-        // Load ảnh từ API
         Glide.with(context)
                 .load("http://10.0.2.2:8080" + product.getImageUrl())
                 .placeholder(R.drawable.product1)
                 .error(R.drawable.product2)
                 .into(holder.productImage);
 
-        // Xử lý nút Sửa
         holder.btnEdit.setOnClickListener(v ->
                 Toast.makeText(context, "Sửa sản phẩm: " + product.getName(), Toast.LENGTH_SHORT).show());
 
-        // Xử lý nút Xóa
         holder.btnDelete.setOnClickListener(v -> {
-            productList.remove(position);
-            notifyDataSetChanged();
-            Toast.makeText(context, "Xóa sản phẩm: " + product.getName(), Toast.LENGTH_SHORT).show();
+            deleteListener.onProductDelete(product.getId()); // Gọi interface để xóa
         });
     }
 

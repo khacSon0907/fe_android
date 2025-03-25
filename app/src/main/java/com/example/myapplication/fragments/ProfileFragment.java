@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.R;
 import com.example.myapplication.model.ProfileOption;
+import com.example.myapplication.view.authentication.Admin;
 import com.example.myapplication.view.customAdapter.ProfileAdapter;
 import com.example.myapplication.view.authentication.Login;
 import com.example.myapplication.view.authentication.Register;
@@ -38,7 +39,7 @@ public class ProfileFragment extends Fragment {
     private ProfileAdapter adapter;
     private List<ProfileOption> options;
 
-    private Button btn_login, btn_register, btnLogout,btnUpgradeVIP;
+    private Button btn_login, btn_register, btnLogout,btnUpgradeVIP,btn_nextAdmin;
     private TextView tvUserEmail, tvUserName;
 
     private LinearLayout layoutAuth ,quick_buttons;
@@ -54,7 +55,7 @@ public class ProfileFragment extends Fragment {
         btn_login = view.findViewById(R.id.btn_login);
         btn_register = view.findViewById(R.id.btn_register);
         btnLogout = view.findViewById(R.id.btnLogout);
-
+        btn_nextAdmin = view.findViewById(R.id.btn_nextAdmin);
         cardWallet = view.findViewById(R.id.cardWallet);
         cardView = view.findViewById(R.id.cardView);
         layoutAuth = view.findViewById(R.id.layoutAuth);
@@ -97,6 +98,14 @@ public class ProfileFragment extends Fragment {
                 startActivity(intent);
             }
         });
+        btn_nextAdmin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(requireContext(), Admin.class);
+                startActivity(intent);
+            }
+        });
+
         btnLogout.setOnClickListener(v -> {
             Toast.makeText(requireContext(), "Đăng xuất thành công", Toast.LENGTH_SHORT).show();
 
@@ -111,6 +120,8 @@ public class ProfileFragment extends Fragment {
             cardView.setVisibility(View.GONE);
             btnUpgradeVIP.setVisibility(View.GONE);
             cardWallet.setVisibility(View.GONE);
+            btn_nextAdmin.setVisibility(View.GONE);
+
         });
         checkLoginStatus();
 
@@ -124,10 +135,19 @@ public class ProfileFragment extends Fragment {
                 cardView.setVisibility(View.VISIBLE);
                 btnUpgradeVIP.setVisibility(View.VISIBLE);
                 cardWallet.setVisibility(View.VISIBLE);
+
+                if ("ADMIN".equals(user.getUserRole())) {
+                    btn_nextAdmin.setVisibility(View.VISIBLE);  // Hiện nút Admin
+                } else {
+                    btn_nextAdmin.setVisibility(View.GONE);     // Ẩn nút Admin
+                }
             } else {
                 tvUserEmail.setText("Thông tin người dùng không có sẵn.");
+
             }
         });
+
+
         return view;
     }
 
@@ -142,7 +162,6 @@ public class ProfileFragment extends Fragment {
             cardView.setVisibility(View.VISIBLE);
             btnUpgradeVIP.setVisibility(View.VISIBLE);
             cardWallet.setVisibility(View.VISIBLE);; // Hiện giao diện user
-
             tvUserEmail.setText("Email: " + email);
 
             getUserData(email);
@@ -157,7 +176,6 @@ public class ProfileFragment extends Fragment {
     }
 
     private void getUserData(String email) {
-
         if (email != null && !email.isEmpty()) {
             authViewModel.getUserbyEmail(email); // Gọi phương thức để lấy thông tin người dùng
         }

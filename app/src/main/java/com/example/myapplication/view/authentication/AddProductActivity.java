@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -42,7 +43,7 @@ public class AddProductActivity extends AppCompatActivity {
     private Uri imageUri;
     private Spinner spin_category, spin_brand;
     private EditText edtTenSanPham, edtGiaSanPham, edtMoTaSp;
-    private Button btn_save, btnUpload;
+    private Button btn_save, btnUpload,btn_back;
     private ProductViewModel productViewModel;
 
     @SuppressLint("MissingInflatedId")
@@ -60,6 +61,7 @@ public class AddProductActivity extends AppCompatActivity {
         edtMoTaSp = findViewById(R.id.edtMoTaSp);
         spin_category = findViewById(R.id.spin_catgory);
         spin_brand = findViewById(R.id.spin_brand);
+        btn_back = findViewById(R.id.btn_back);
 
         // Khởi tạo ViewModel
         productViewModel = new ViewModelProvider(this).get(ProductViewModel.class);
@@ -78,6 +80,13 @@ public class AddProductActivity extends AppCompatActivity {
         productViewModel.getSuccessMessage().observe(this, result -> {
             if (result != null) {
                 showSuccessAlert(result);
+            }
+        });
+        btn_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AddProductActivity.this, AdminQlsp.class);
+                startActivity(intent);
             }
         });
     }

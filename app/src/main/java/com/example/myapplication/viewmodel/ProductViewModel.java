@@ -12,6 +12,7 @@ import com.example.myapplication.respone.ResponseWrapper;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -104,6 +105,29 @@ public class ProductViewModel extends AndroidViewModel {
 
             @Override
             public void onFailure(Call<List<ProductAdmin>> call, Throwable t) {
+                errorMessageLiveData.setValue("Lỗi kết nối: " + t.getMessage());
+            }
+        });
+    }
+    public void deleteProduct(String productId) {
+        ApiService apiService = ApiClient.getClient().create(ApiService.class);
+        Call<Map<String, String>> call = apiService.deleteProduct(productId);
+
+        call.enqueue(new Callback<Map<String, String>>() {
+            @Override
+            public void onResponse(Call<Map<String, String>> call, Response<Map<String, String>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    // Lấy thông điệp từ map JSON trả về
+                    String message = response.body().get("message");
+                    successMessageLiveData.setValue(message);
+                    fetchProducts(); // Tải lại danh sách sau khi xoá thành công
+                } else {
+                    errorMessageLiveData.setValue("Lỗi: " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Map<String, String>> call, Throwable t) {
                 errorMessageLiveData.setValue("Lỗi kết nối: " + t.getMessage());
             }
         });
