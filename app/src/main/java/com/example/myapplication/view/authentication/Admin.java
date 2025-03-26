@@ -15,7 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.myapplication.R;
-import com.example.myapplication.view.MainActivity;
+import com.example.myapplication.view.home.MainActivity;
 
 import java.util.ArrayList;
 import java.util.Arrays;

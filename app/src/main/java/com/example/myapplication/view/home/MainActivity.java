@@ -1,4 +1,4 @@
-package com.example.myapplication.view;
+package com.example.myapplication.view.home;
 
 import android.os.Bundle;
 import androidx.activity.EdgeToEdge;

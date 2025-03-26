@@ -3,6 +3,7 @@ package com.example.myapplication.view.customAdapter;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import com.bumptech.glide.Glide;
 import com.example.myapplication.R;
 import com.example.myapplication.model.Product;
 import com.example.myapplication.model.ProductAdmin;
+import com.example.myapplication.view.home.ProductDetailActivity;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -50,6 +52,17 @@ public class UserProductAdapter extends RecyclerView.Adapter<UserProductAdapter.
                 .placeholder(R.drawable.product1)
                 .error(R.drawable.product2)
                 .into(holder.productImage);
+
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, ProductDetailActivity.class);
+            intent.putExtra("name", product.getName());
+            intent.putExtra("price", String.valueOf(product.getPrice()));
+            intent.putExtra("description", product.getDescription());
+            intent.putExtra("category", product.getCategory());
+            intent.putExtra("brand", product.getBrand());
+            intent.putExtra("imageUrl", product.getImageUrl());
+            context.startActivity(intent);
+        });
     }
 
     @Override

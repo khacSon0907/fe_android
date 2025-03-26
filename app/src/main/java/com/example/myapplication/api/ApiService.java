@@ -1,5 +1,7 @@
 package com.example.myapplication.api;
 
+import com.example.myapplication.model.Cart;
+import com.example.myapplication.model.Item;
 import com.example.myapplication.model.LoginRequest;
 import com.example.myapplication.model.ProductAdmin;
 import com.example.myapplication.model.RegisterRequest;
@@ -21,6 +23,7 @@ import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface ApiService {
     @POST("api/register") // Thay "api/register" bằng endpoint thực tế của bạn
@@ -59,4 +62,9 @@ public interface ApiService {
             @Part("category") RequestBody category,
             @Part("brand") RequestBody brand
     );
+    @POST("api/cart/add")
+    Call<Void> addToCart(@Query("email") String email, @Body Item item);
+
+    @GET("api/cart")
+    Call<Cart> getCart(@Query("email") String email);
 }

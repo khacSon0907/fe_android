@@ -1,11 +1,17 @@
 package com.example.myapplication.viewmodel;
 
+import android.app.Application;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.myapplication.api.ApiClient;
 import com.example.myapplication.api.ApiService;
+import com.example.myapplication.model.Cart;
+import com.example.myapplication.model.Item;
 import com.example.myapplication.model.LoginRequest;
 import com.example.myapplication.model.RegisterRequest;
 import com.example.myapplication.respone.ResponLogin;
@@ -21,10 +27,30 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class AuthViewModel extends ViewModel {
+public class AuthViewModel extends AndroidViewModel {
+
+    private final MutableLiveData<Cart> cartLiveData = new MutableLiveData<>();
+    private final MutableLiveData<String> errorLiveData = new MutableLiveData<>();
+    private final MutableLiveData<String> successLiveData = new MutableLiveData<>();
     private MutableLiveData<String> registerResult = new MutableLiveData<>();
     private MutableLiveData<String> loginResult = new MutableLiveData<>();
     private MutableLiveData<User> userLiveData = new MutableLiveData<>();
+
+    public AuthViewModel(@NonNull Application application) {
+        super(application);
+    }
+
+    public MutableLiveData<Cart> getCartLiveData() {
+        return cartLiveData;
+    }
+
+    public MutableLiveData<String> getErrorLiveData() {
+        return errorLiveData;
+    }
+
+    public MutableLiveData<String> getSuccessLiveData() {
+        return successLiveData;
+    }
 
     public LiveData<User> getUserLiveData() {
         return userLiveData;
@@ -164,5 +190,48 @@ public class AuthViewModel extends ViewModel {
             }
         });
     }
+    // Gọi API thêm vào giỏ hàng
+    public void addToCart(String email, Item item) {
+        ApiService api = ApiClient.getClient().create(ApiService.class);
+        Call<Void> call = api.addToCart(email, item);
 
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    successLiveData.setValue("Đã thêm vào giỏ hàng");
+                    getCart(email); // load lại cart
+                } else {
+                    errorLiveData.setValue("Thêm vào giỏ hàng thất bại");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                errorLiveData.setValue("Lỗi mạng: " + t.getMessage());
+            }
+        });
+    }
+
+    // Gọi API lấy giỏ hàng
+    public void getCart(String email) {
+        ApiService api = ApiClient.getClient().create(ApiService.class);
+        Call<Cart> call = api.getCart(email);
+
+        call.enqueue(new Callback<Cart>() {
+            @Override
+            public void onResponse(Call<Cart> call, Response<Cart> response) {
+                if (response.isSuccessful()) {
+                    cartLiveData.setValue(response.body());
+                } else {
+                    errorLiveData.setValue("Lỗi khi tải giỏ hàng");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Cart> call, Throwable t) {
+                errorLiveData.setValue("Lỗi kết nối: " + t.getMessage());
+            }
+        });
+    }
 }
