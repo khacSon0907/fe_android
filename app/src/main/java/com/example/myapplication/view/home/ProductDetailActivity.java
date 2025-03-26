@@ -2,6 +2,7 @@ package com.example.myapplication.view.home;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -13,32 +14,33 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
+
 import com.bumptech.glide.Glide;
 import com.example.myapplication.R;
+import com.example.myapplication.model.Item;
+import com.example.myapplication.model.ProductAdmin;
+import com.example.myapplication.viewmodel.AuthViewModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-
 public class ProductDetailActivity extends AppCompatActivity {
-
     private ImageView productImage;
     private TextView productName, productPrice, productDescription, productCategory, productBrand;
     private ImageButton btnBack, btnGoToCart;
-
-    private TextView tvSizeLabel ;
-    private String selectedSize = null;
     private LinearLayout sizeContainer;
-
-    private Button btnAddToCart ;
-
+    private Button btnAddToCart;
+    private String selectedSize = null;
+    private AuthViewModel authViewModel;
+    private ProductAdmin product;
 
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_product_detail); // ← tên XML chi tiết
+        setContentView(R.layout.activity_product_detail);
 
         productImage = findViewById(R.id.productImage);
         productName = findViewById(R.id.productName);
@@ -50,49 +52,77 @@ public class ProductDetailActivity extends AppCompatActivity {
         btnGoToCart = findViewById(R.id.btnGoToCart);
         sizeContainer = findViewById(R.id.sizeContainer);
         btnAddToCart = findViewById(R.id.btnAddToCart);
-        // Nhận dữ liệu
-        Intent intent = getIntent();
-        String name = intent.getStringExtra("name");
-        String price = intent.getStringExtra("price");
-        String description = intent.getStringExtra("description");
-        String category = intent.getStringExtra("category");
-        loadSizeOptionsByCategory(category);
-        String brand = intent.getStringExtra("brand");
-        String imageUrl = intent.getStringExtra("imageUrl");
 
-        // Hiển thị dữ liệu
-        productName.setText(name);
-        productPrice.setText(price + " VNĐ");
-        productDescription.setText(description);
-        productCategory.setText("Loại: " + category);
-        productBrand.setText("Hãng: " + brand);
+        authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
+
+        Intent intent = getIntent();
+        product = new ProductAdmin(
+                intent.getStringExtra("id"),
+                intent.getStringExtra("name"),
+                Double.parseDouble(intent.getStringExtra("price")),
+                intent.getStringExtra("description"),
+                intent.getStringExtra("category"),
+                intent.getStringExtra("brand"),
+                intent.getStringExtra("imageUrl")
+        );
+
+        productName.setText(product.getName());
+        productPrice.setText(product.getPrice() + " VNĐ");
+        productDescription.setText(product.getDescription());
+        productCategory.setText("Loại: " + product.getCategory());
+        productBrand.setText("Hãng: " + product.getBrand());
 
         Glide.with(this)
-                .load("http://10.0.2.2:8080" + imageUrl)
+                .load("http://10.0.2.2:8080" + product.getImageUrl())
                 .placeholder(R.drawable.product1)
                 .into(productImage);
 
-        // Quay lại
+        loadSizeOptionsByCategory(product.getCategory());
+
         btnBack.setOnClickListener(v -> finish());
 
-        // Đến giỏ hàng
-        btnGoToCart.setOnClickListener(v -> {
-            Intent goToCart = new Intent(ProductDetailActivity.this,CartActivity.class);
-            startActivity(goToCart);
-        });
-        btnAddToCart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (selectedSize == null) {
-                    Toast.makeText(ProductDetailActivity.this, "Vui lòng chọn size!", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+        btnGoToCart.setOnClickListener(v -> startActivity(new Intent(ProductDetailActivity.this, CartActivity.class)));
+
+        btnAddToCart.setOnClickListener(v -> {
+            if (selectedSize == null) {
+                Toast.makeText(ProductDetailActivity.this, "Vui lòng chọn size!", Toast.LENGTH_SHORT).show();
+                return;
             }
+
+            SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+            String email = sharedPreferences.getString("email", null);
+
+            if (email == null) {
+                Toast.makeText(ProductDetailActivity.this, "Bạn cần đăng nhập để thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            Item item = new Item(
+                    product.getId(),
+                    product.getName() + " - Size " + selectedSize,
+                    1,
+                    product.getPrice(),
+                    selectedSize   // TRUYỀN size ở đây
+            );
+            authViewModel.addToCart(email, item);
+
+            authViewModel.getSuccessLiveData().observe(ProductDetailActivity.this, message -> {
+                if (message != null) {
+                    Toast.makeText(ProductDetailActivity.this, message, Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            authViewModel.getErrorLiveData().observe(ProductDetailActivity.this, error -> {
+                if (error != null) {
+                    Toast.makeText(ProductDetailActivity.this, error, Toast.LENGTH_SHORT).show();
+                }
+            });
+
         });
     }
+
     private void loadSizeOptionsByCategory(String category) {
         List<String> sizes = new ArrayList<>();
-
         if (category == null) return;
 
         category = category.toLowerCase();
@@ -100,13 +130,9 @@ public class ProductDetailActivity extends AppCompatActivity {
         if (category.contains("áo")) {
             sizes = Arrays.asList("S", "M", "L", "XL");
         } else if (category.contains("quần")) {
-            for (int i = 25; i <= 32; i++) {
-                sizes.add(String.valueOf(i));
-            }
+            for (int i = 25; i <= 32; i++) sizes.add(String.valueOf(i));
         } else if (category.contains("giày") || category.contains("dép")) {
-            for (int i = 35; i <= 42; i++) {
-                sizes.add(String.valueOf(i));
-            }
+            for (int i = 35; i <= 42; i++) sizes.add(String.valueOf(i));
         }
 
         for (String size : sizes) {
@@ -115,7 +141,6 @@ public class ProductDetailActivity extends AppCompatActivity {
             tv.setPadding(30, 20, 30, 20);
             tv.setBackgroundResource(R.drawable.size_unselected);
             tv.setTextColor(Color.BLACK);
-
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT
@@ -123,7 +148,6 @@ public class ProductDetailActivity extends AppCompatActivity {
             params.setMargins(16, 0, 0, 0);
             tv.setLayoutParams(params);
 
-            // Sự kiện chọn size
             tv.setOnClickListener(v -> {
                 selectedSize = size;
                 updateSizeUI(sizeContainer, size);
@@ -132,15 +156,12 @@ public class ProductDetailActivity extends AppCompatActivity {
             sizeContainer.addView(tv);
         }
     }
+
     private void updateSizeUI(LinearLayout container, String selected) {
         for (int i = 0; i < container.getChildCount(); i++) {
             TextView tv = (TextView) container.getChildAt(i);
-            if (tv.getText().toString().equals(selected)) {
-                tv.setBackgroundResource(R.drawable.size_selected);
-            } else {
-                tv.setBackgroundResource(R.drawable.size_unselected);
-            }
+            tv.setBackgroundResource(tv.getText().toString().equals(selected)
+                    ? R.drawable.size_selected : R.drawable.size_unselected);
         }
     }
-
 }

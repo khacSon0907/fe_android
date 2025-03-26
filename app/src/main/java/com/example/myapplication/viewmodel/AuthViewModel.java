@@ -34,7 +34,8 @@ public class AuthViewModel extends AndroidViewModel {
     private final MutableLiveData<String> successLiveData = new MutableLiveData<>();
     private MutableLiveData<String> registerResult = new MutableLiveData<>();
     private MutableLiveData<String> loginResult = new MutableLiveData<>();
-    private MutableLiveData<User> userLiveData = new MutableLiveData<>();
+    private final MutableLiveData<User> userLiveData = new MutableLiveData<>();
+
 
     public AuthViewModel(@NonNull Application application) {
         super(application);
@@ -119,6 +120,7 @@ public class AuthViewModel extends AndroidViewModel {
 
 
                         // Cập nhật UI hoặc lưu thông tin người dùng
+                        userLiveData.setValue(user);
                         loginResult.setValue("Đăng nhập thành công! Chào " + user.getUsername());
                     } else {
                         loginResult.setValue("Đăng nhập không thành công: Dữ liệu người dùng bị thiếu.");

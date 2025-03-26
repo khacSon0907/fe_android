@@ -18,6 +18,15 @@ public class ProductAdmin {
         this.category = category;
         this.brand = brand;
     }
+    public ProductAdmin(String id, String name, double price, String description, String category, String brand, String imageUrl) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.description = description;
+        this.category = category;
+        this.brand = brand;
+        this.imageUrl = imageUrl;
+    }
 
     public ProductAdmin(String name, double price, String description, String category, String brand) {
         this.name = name;

@@ -1,7 +1,5 @@
 package com.example.myapplication.view.customAdapter;
 
-
-
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -15,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.myapplication.R;
-import com.example.myapplication.model.Product;
 import com.example.myapplication.model.ProductAdmin;
 import com.example.myapplication.view.home.ProductDetailActivity;
 
@@ -41,11 +38,8 @@ public class UserProductAdapter extends RecyclerView.Adapter<UserProductAdapter.
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ProductAdmin product = productList.get(position);
-
         holder.productName.setText(product.getName());
-        DecimalFormat decimalFormat = new DecimalFormat("#,###");
-        String formattedPrice = decimalFormat.format(product.getPrice());
-        holder.productPrice.setText(formattedPrice + " VNĐ");
+        holder.productPrice.setText(new DecimalFormat("#,###").format(product.getPrice()) + " VNĐ");
 
         Glide.with(context)
                 .load("http://10.0.2.2:8080" + product.getImageUrl())
@@ -55,6 +49,7 @@ public class UserProductAdapter extends RecyclerView.Adapter<UserProductAdapter.
 
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, ProductDetailActivity.class);
+            intent.putExtra("id", product.getId());
             intent.putExtra("name", product.getName());
             intent.putExtra("price", String.valueOf(product.getPrice()));
             intent.putExtra("description", product.getDescription());
