@@ -1,87 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:padding="5dp"
-    android:weightSum="10">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="8dp"
+    android:background="@android:color/white"
+    android:layout_marginBottom="8dp">
 
-    <!-- Cột hình ảnh sản phẩm -->
-    <LinearLayout
-        android:layout_width="0dp"
+    <!-- Hình ảnh sản phẩm -->
+    <ImageView
+        android:id="@+id/imageViewProduct"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:scaleType="centerCrop"
+        android:layout_alignParentStart="true"
+        android:layout_marginEnd="8dp"
+        android:adjustViewBounds="true"
+        android:layout_centerVertical="true" />
+
+    <!-- Nút xoá góc trên bên phải -->
+    <Button
+        android:id="@+id/btnDeleteCart"
+        android:layout_width="60dp"
+        android:layout_height="40dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:text="X"
+        app:backgroundTint="@null"
+        android:layout_margin="4dp"
+        android:background="@color/red"
+        />
+
+    <!-- CheckBox bên dưới nút xoá -->
+    <CheckBox
+        android:id="@+id/checkboxSelect"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="3"
-        android:gravity="center">
+        android:layout_below="@id/btnDeleteCart"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="8dp" />
 
-        <ImageView
-            android:id="@+id/imageViewProduct"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:adjustViewBounds="true"
-            android:layout_margin="5dp"/>
-    </LinearLayout>
-
-    <!-- Cột thông tin sản phẩm -->
-    <LinearLayout
-        android:layout_width="0dp"
+    <!-- Tên sản phẩm -->
+    <TextView
+        android:id="@+id/textviewProductName"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="7"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:layout_margin="5dp">
+        android:text="Tên sản phẩm"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:textColor="#000"
+        android:layout_toEndOf="@id/imageViewProduct"
+        android:layout_toStartOf="@id/btnDeleteCart"
+        android:layout_alignTop="@id/imageViewProduct" />
+
+    <!-- Giá sản phẩm -->
+    <TextView
+        android:id="@+id/textviewProductPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="200.000 Đ"
+        android:textColor="#F44336"
+        android:textSize="14sp"
+        android:layout_below="@id/textviewProductName"
+        android:layout_toEndOf="@id/imageViewProduct"
+        android:layout_toStartOf="@id/btnDeleteCart"
+        android:layout_marginTop="4dp" />
+
+    <!-- Bộ chỉnh số lượng -->
+    <LinearLayout
+        android:id="@+id/quantityLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@id/textviewProductPrice"
+        android:layout_toEndOf="@id/imageViewProduct"
+        android:layout_toStartOf="@id/btnDeleteCart"
+        android:layout_marginTop="8dp">
+
+        <Button
+            android:id="@+id/buttonminus"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+
+            android:textColor="#fff"
+            android:background="@drawable/giam" />
 
         <TextView
-            android:id="@+id/textviewProductName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Tên sản phẩm"
-            android:textSize="20sp"
-            android:textColor="#10100f" />
+            android:id="@+id/textviewQuantity"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:gravity="center"
+            android:text="1"
+            android:layout_marginRight="10dp"
+            android:textSize="18sp"
+            android:background="@android:color/darker_gray"
+            android:textColor="#000"
+            android:layout_marginHorizontal="5dp" />
 
-        <TextView
-            android:id="@+id/textviewProductPrice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="3dp"
-            android:text="Giá sản phẩm"
-            android:textColor="#f20"
-            android:textSize="15sp" />
-
-        <!-- Cột tăng/giảm số lượng -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center">
-
-            <Button
-                android:id="@+id/buttonminus"
-                android:layout_width="50dp"
-                android:layout_height="wrap_content"
-                android:text="-"
-                android:textSize="30dp"
-                android:textColor="#FFFFFF"
-                android:backgroundTint="#000000"
-                android:layout_margin="5dp"/>
-
-            <TextView
-                android:id="@+id/textviewQuantity"
-                android:layout_width="70dp"
-                android:layout_height="wrap_content"
-                android:text="1"
-                android:textSize="30dp"
-                android:gravity="center"
-                android:layout_marginTop="5dp"/>
-
-            <Button
-                android:id="@+id/buttonplus"
-                android:layout_width="50dp"
-                android:layout_height="wrap_content"
-                android:text="+"
-                android:textSize="30dp"
-                android:textColor="#FFFFFF"
-                android:backgroundTint="#000000"
-                android:layout_margin="5dp"/>
-        </LinearLayout>
+        <Button
+            android:id="@+id/buttonplus"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:textColor="#fff"
+            android:background="@drawable/tang"
+            />
     </LinearLayout>
-</LinearLayout>
+</RelativeLayout>

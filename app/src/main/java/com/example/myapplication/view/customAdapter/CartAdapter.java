@@ -7,28 +7,33 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.myapplication.R;
 import com.example.myapplication.model.Cart;
 import com.example.myapplication.model.Item;
+import com.example.myapplication.viewmodel.AuthViewModel;
 
 import java.text.DecimalFormat;
 import java.util.List;
 
-public class CartAdapter extends BaseAdapter implements ListAdapter {
-    private Context context;
-    private List<Item> itemList;
+public class CartAdapter extends BaseAdapter {
+    private final Context context;
+    private final List<Item> itemList;
+    private final AuthViewModel authViewModel;
+    private final String email;
 
-    public CartAdapter(Context context, Cart cart) {
+    public CartAdapter(Context context, Cart cart, AuthViewModel authViewModel, String email) {
         this.context = context;
         this.itemList = cart.getItems();
+        this.authViewModel = authViewModel;
+        this.email = email;
     }
 
     @Override
     public int getCount() {
-        return itemList.size();
+        return itemList != null ? itemList.size() : 0;
     }
 
     @Override
@@ -42,51 +47,70 @@ public class CartAdapter extends BaseAdapter implements ListAdapter {
     }
 
     private static class ViewHolder {
-        TextView txtTenGioHang, txtGiaGioHang, txtSoLuong;
-        ImageView imgGioHang;
-        Button btnMinus, btnPlus;
+        TextView txtTen, txtGia, txtSoLuong;
+        ImageView img;
+        Button btnPlus, btnMinus, btnDelete;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder viewHolder;
+        ViewHolder holder;
         if (convertView == null) {
-            viewHolder = new ViewHolder();
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.item_cart, parent, false);
-
-            viewHolder.imgGioHang = convertView.findViewById(R.id.imageViewProduct);
-            viewHolder.txtTenGioHang = convertView.findViewById(R.id.textviewProductName);
-            viewHolder.txtGiaGioHang = convertView.findViewById(R.id.textviewProductPrice);
-            viewHolder.txtSoLuong = convertView.findViewById(R.id.textviewQuantity);
-            viewHolder.btnMinus = convertView.findViewById(R.id.buttonminus);
-            viewHolder.btnPlus = convertView.findViewById(R.id.buttonplus);
-
-            convertView.setTag(viewHolder);
+            convertView = LayoutInflater.from(context).inflate(R.layout.item_cart, parent, false);
+            holder = new ViewHolder();
+            holder.img = convertView.findViewById(R.id.imageViewProduct);
+            holder.txtTen = convertView.findViewById(R.id.textviewProductName);
+            holder.txtGia = convertView.findViewById(R.id.textviewProductPrice);
+            holder.txtSoLuong = convertView.findViewById(R.id.textviewQuantity);
+            holder.btnMinus = convertView.findViewById(R.id.buttonminus);
+            holder.btnPlus = convertView.findViewById(R.id.buttonplus);
+            holder.btnDelete = convertView.findViewById(R.id.btnDeleteCart);
+            convertView.setTag(holder);
         } else {
-            viewHolder = (ViewHolder) convertView.getTag();
+            holder = (ViewHolder) convertView.getTag();
         }
 
+
         Item item = itemList.get(position);
-        viewHolder.txtTenGioHang.setText(item.getProductName());
 
-        DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
-        viewHolder.txtGiaGioHang.setText(decimalFormat.format(item.getPrice()) + " Đ");
+        holder.btnDelete.setOnClickListener(v -> {
+            authViewModel.deleteCartItem(email, item.getProductId(), item.getSize());
+            // KHÔNG xoá local, đợi LiveData cập nhật lại từ backend
+        });
 
-        viewHolder.txtSoLuong.setText(String.valueOf(item.getQuantity()));
+        holder.txtTen.setText(item.getProductName());
+        holder.txtSoLuong.setText(String.valueOf(item.getQuantity()));
 
-        // Xử lý sự kiện tăng/giảm số lượng
-        viewHolder.btnPlus.setOnClickListener(v -> {
+        DecimalFormat formatter = new DecimalFormat("#,###");
+        holder.txtGia.setText(formatter.format(item.getPrice()) + " Đ");
+
+        // Load ảnh
+        if (item.getImageUrl() != null && !item.getImageUrl().isEmpty()) {
+            String fullImageUrl = "http://10.0.2.2:8080" + item.getImageUrl();
+            Glide.with(context)
+                    .load(fullImageUrl)
+                    .placeholder(R.drawable.product1)
+                    .error(R.drawable.product2)
+                    .into(holder.img);
+        } else {
+            holder.img.setImageResource(R.drawable.product1);
+        }
+
+        // Tăng số lượng
+        holder.btnPlus.setOnClickListener(v -> {
             item.setQuantity(item.getQuantity() + 1);
             notifyDataSetChanged();
         });
 
-        viewHolder.btnMinus.setOnClickListener(v -> {
+        // Giảm số lượng
+        holder.btnMinus.setOnClickListener(v -> {
             if (item.getQuantity() > 1) {
                 item.setQuantity(item.getQuantity() - 1);
                 notifyDataSetChanged();
             }
         });
+
+
 
         return convertView;
     }

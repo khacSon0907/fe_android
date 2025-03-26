@@ -5,7 +5,18 @@ public class Item {
     private String productId;
     private String productName;
     private int quantity;
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
     private double price;
+    private String imageUrl;
+
     private String size;
 
     // Constructor
@@ -15,6 +26,17 @@ public class Item {
         this.quantity = quantity;
         this.price = price;
     }
+
+    // ✅ Constructor đầy đủ
+    public Item(String productId, String productName, int quantity, double price, String size, String imageUrl) {
+        this.productId = productId;
+        this.productName = productName;
+        this.quantity = quantity;
+        this.price = price;
+        this.size = size;
+        this.imageUrl = imageUrl;
+    }
+
 
     public String getSize() {
         return size;

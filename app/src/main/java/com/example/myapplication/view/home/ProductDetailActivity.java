@@ -102,7 +102,8 @@ public class ProductDetailActivity extends AppCompatActivity {
                     product.getName() + " - Size " + selectedSize,
                     1,
                     product.getPrice(),
-                    selectedSize   // TRUYỀN size ở đây
+                    selectedSize,
+                    product.getImageUrl()// TRUYỀN size ở đây
             );
             authViewModel.addToCart(email, item);
 

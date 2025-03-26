@@ -16,6 +16,7 @@ import com.example.myapplication.model.LoginRequest;
 import com.example.myapplication.model.RegisterRequest;
 import com.example.myapplication.respone.ResponLogin;
 import com.example.myapplication.model.User;
+import com.example.myapplication.respone.ResponseWrapper;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -236,4 +237,26 @@ public class AuthViewModel extends AndroidViewModel {
             }
         });
     }
+    public void deleteCartItem(String email, String productId, String size) {
+        ApiService api = ApiClient.getClient().create(ApiService.class);
+        Call<ResponseWrapper<Void>> call = api.deleteCartItem(email, productId, size);
+        call.enqueue(new Callback<ResponseWrapper<Void>>() {
+            @Override
+            public void onResponse(Call<ResponseWrapper<Void>> call, Response<ResponseWrapper<Void>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    String message = response.body().getMessage();
+                    successLiveData.setValue(message);
+                    getCart(email); // Cập nhật lại giỏ hàng
+                } else {
+                    errorLiveData.setValue("Xoá thất bại");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseWrapper<Void>> call, Throwable t) {
+                errorLiveData.setValue("Lỗi mạng khi xoá sản phẩm");
+            }
+        });
+    }
+
 }

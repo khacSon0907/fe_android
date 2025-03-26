@@ -67,4 +67,13 @@ public interface ApiService {
 
     @GET("api/cart")
     Call<Cart> getCart(@Query("email") String email);
+
+    @DELETE("api/cart/remove")
+    Call<ResponseWrapper<Void>> deleteCartItem(
+            @Query("email") String email,
+            @Query("productId") String productId,
+            @Query("size") String size
+    );
+
+
 }

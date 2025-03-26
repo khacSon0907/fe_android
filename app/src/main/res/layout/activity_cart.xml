@@ -2,47 +2,49 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.example.myapplication.model.Cart">
+    android:layout_height="match_parent">
+
+    <!-- Toolbar -->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbarcart"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="#000000"
+        android:background="#000"
+        android:layout_marginTop="50dp"
         app:title="Giỏ hàng"
-        app:titleTextColor="@color/white"
+        app:titleTextColor="#FFF"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
-    <!-- Layout chứa nội dung giỏ hàng -->
+
+    <!-- Nội dung -->
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         android:orientation="vertical"
         app:layout_constraintTop_toBottomOf="@id/toolbarcart"
+        app:layout_constraintBottom_toTopOf="@id/layout_tongtien"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/layout_tongtien">
+        app:layout_constraintEnd_toEndOf="parent">
+
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-            <!-- Thông báo nếu giỏ hàng trống -->
+
             <TextView
                 android:id="@+id/textviewcart"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:text="Giỏ hàng bạn đang trống"
-                android:textSize="20sp"
-                android:visibility="visible" />
+                android:layout_gravity="center"
+                android:textSize="18sp"
+                android:visibility="gone" />
 
-            <!-- ListView hiển thị danh sách sản phẩm -->
             <ListView
                 android:id="@+id/listviewcart"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"/>
         </FrameLayout>
     </LinearLayout>
 
@@ -57,40 +59,25 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Cột "Tổng tiền" -->
-        <LinearLayout
+        <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center_vertical">
+            android:text="Tổng tiền:"
+            android:textStyle="bold"
+            android:textColor="#000"
+            android:textSize="18sp"/>
 
-            <TextView
-                android:textColor="#f20"
-                android:text="Tổng tiền"
-                android:textStyle="bold"
-                android:textSize="20sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
-
-        <!-- Cột Giá trị -->
-        <LinearLayout
-            android:layout_width="0dp"
+        <TextView
+            android:id="@+id/textview_giatri"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="end">
-
-            <TextView
-                android:id="@+id/textview_giatri"
-                android:textColor="#f20"
-                android:text="0 đ"
-                android:textSize="20sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
+            android:text="0 Đ"
+            android:textColor="#F44336"
+            android:textSize="18sp"/>
     </LinearLayout>
 
-    <!-- Layout chứa nút bấm -->
+    <!-- Nút -->
     <LinearLayout
         android:id="@+id/layout_button"
         android:layout_width="match_parent"
@@ -101,27 +88,22 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Button Thanh toán -->
         <Button
             android:id="@+id/buttonthanhtoangiohang"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Thanh toán giỏ hàng"
-            android:textSize="18sp"
-            android:textColor="#FFFFFF"
-            android:backgroundTint="#000000"/>
+            android:text="Thanh toán"
+            android:textColor="#fff"
+            android:backgroundTint="#000"/>
 
-        <!-- Button Tiếp tục mua hàng -->
         <Button
             android:id="@+id/buttontieptucmuahang"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Tiếp tục mua hàng"
-            android:textSize="18sp"
-            android:textColor="#FFFFFF"
-            android:backgroundTint="#AAAAAA"/>
+            android:text="Tiếp tục mua"
+            android:textColor="#fff"
+            android:backgroundTint="#888"/>
     </LinearLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>
