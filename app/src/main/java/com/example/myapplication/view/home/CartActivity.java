@@ -16,8 +16,6 @@ import com.example.myapplication.model.Item;
 import com.example.myapplication.view.customAdapter.CartAdapter;
 import com.example.myapplication.viewmodel.AuthViewModel;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 public class CartActivity extends AppCompatActivity {
@@ -37,7 +35,7 @@ public class CartActivity extends AppCompatActivity {
 
         listViewCart = findViewById(R.id.listviewcart);
         textViewTotal = findViewById(R.id.textview_giatri);
-        buttonCheckout = findViewById(R.id.buttonthanhtoangiohang);
+        buttonCheckout = findViewById(R.id.btnOrder);
         buttonContinueShopping = findViewById(R.id.buttontieptucmuahang);
 
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
@@ -55,11 +53,17 @@ public class CartActivity extends AppCompatActivity {
         authViewModel.getCart(email);
         authViewModel.getCartLiveData().observe(this, cart -> {
             if (cart != null && !cart.getItems().isEmpty()) {
-                cartAdapter = new CartAdapter(this, cart, authViewModel, email);
-                listViewCart.setAdapter(cartAdapter);
-                recalculateTotal(); // 👈 Dùng đúng hàm tổng tiền khi load dữ liệu
+                if (cartAdapter == null) {
+                    cartAdapter = new CartAdapter(this, cart, authViewModel, email);
+                    listViewCart.setAdapter(cartAdapter);
+                } else {
+                    // ✅ Cập nhật dữ liệu mới
+                    cartAdapter.updateCart(cart); // thêm hàm này
+                }
+                recalculateTotal();
             } else {
                 textViewTotal.setText("0 Đ");
+                listViewCart.setAdapter(null); // clear UI nếu giỏ hàng rỗng
                 Toast.makeText(this, "Giỏ hàng trống", Toast.LENGTH_SHORT).show();
             }
         });

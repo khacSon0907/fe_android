@@ -89,11 +89,11 @@
         app:layout_constraintEnd_toEndOf="parent">
 
         <Button
-            android:id="@+id/buttonthanhtoangiohang"
+            android:id="@+id/btnOrder"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Thanh toán"
+            android:text="Đặt Hàng "
             android:textColor="#fff"
             android:backgroundTint="#000"/>
 

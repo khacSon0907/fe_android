@@ -23,7 +23,7 @@ import java.util.List;
 
 public class CartAdapter extends BaseAdapter {
     private final Context context;
-    private final List<Item> itemList;
+    private  List<Item> itemList;
     private final AuthViewModel authViewModel;
     private final String email;
 
@@ -32,6 +32,11 @@ public class CartAdapter extends BaseAdapter {
         this.itemList = cart.getItems();
         this.authViewModel = authViewModel;
         this.email = email;
+    }
+    public void updateCart(Cart cart) {
+        this.itemList.clear();
+        this.itemList.addAll(cart.getItems());
+        notifyDataSetChanged();
     }
 
     @Override
