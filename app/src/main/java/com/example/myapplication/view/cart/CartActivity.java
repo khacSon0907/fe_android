@@ -18,6 +18,7 @@ import com.example.myapplication.view.customAdapter.CartAdapter;
 import com.example.myapplication.viewmodel.AuthViewModel;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Locale;
 
 public class CartActivity extends AppCompatActivity {
@@ -83,7 +84,7 @@ public class CartActivity extends AppCompatActivity {
         // Lắng nghe thông báo thành công
         authViewModel.getSuccessLiveData().observe(this, message -> {
             if (message != null && !message.isEmpty()) {
-                Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
                 authViewModel.getCart(email); // Reload cart sau khi thao tác
             }
         });
@@ -91,7 +92,7 @@ public class CartActivity extends AppCompatActivity {
         // Lắng nghe thông báo thất bại
         authViewModel.getErrorLiveData().observe(this, message -> {
             if (message != null && !message.isEmpty()) {
-                Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -122,7 +123,8 @@ public class CartActivity extends AppCompatActivity {
                 intent.putExtra("selectedItems", new ArrayList<>(selectedItems));
                 intent.putExtra("email", email);
                 intent.putExtra("phonenumber", currentPhoneNumber); // lấy từ user
-                startActivity(intent);
+                startActivityForResult(intent, 100); // Quan trọng!
+
             }
         });
 
@@ -141,6 +143,26 @@ public class CartActivity extends AppCompatActivity {
         }
 
         textViewTotal.setText(String.format(Locale.getDefault(), "%,.0f Đ", total));
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 100 && resultCode == RESULT_OK && data != null) {
+            ArrayList<String> orderedProductIds = data.getStringArrayListExtra("orderedProductIds");
+
+            if (orderedProductIds != null && !orderedProductIds.isEmpty()) {
+                Cart cart = authViewModel.getCartLiveData().getValue();
+                if (cart == null || cart.getItems() == null) return;
+
+                for (Item item : cart.getItems()) {
+                    if (orderedProductIds.contains(item.getProductId())) {
+                        authViewModel.deleteCartItem(email, item.getProductId(), item.getSize());
+                    }
+                }
+            }
+        }
     }
 
 

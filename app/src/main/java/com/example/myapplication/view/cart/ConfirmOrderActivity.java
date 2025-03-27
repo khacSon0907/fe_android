@@ -10,6 +10,9 @@ import com.example.myapplication.model.Item;
 import com.example.myapplication.view.customAdapter.SelectedItemAdapter;
 import com.example.myapplication.viewmodel.AuthViewModel;
 import androidx.lifecycle.ViewModelProvider;
+import com.example.myapplication.model.OrderItem;
+import com.example.myapplication.model.Order;
+import com.example.myapplication.viewmodel.OrderviewModel;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -22,6 +25,7 @@ public class ConfirmOrderActivity extends AppCompatActivity {
     private ListView listViewSelected;
     private EditText editPhone, editAddress;
     private TextView textTotal;
+
     private Button btnConfirm,btnReturn;
 
     private List<Item> selectedItems;
@@ -42,6 +46,36 @@ public class ConfirmOrderActivity extends AppCompatActivity {
 
         btnReturn.setOnClickListener(v -> finish());
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
+
+        OrderviewModel orderviewModel = new ViewModelProvider(this).get(OrderviewModel.class);
+
+        orderviewModel.getMessageLiveData().observe(this, message -> {
+
+            Intent resultIntent = new Intent();
+            ArrayList<String> orderedProductIds = new ArrayList<>();
+            for (Item item : selectedItems) {
+                orderedProductIds.add(item.getProductId());
+            }
+            resultIntent.putStringArrayListExtra("orderedProductIds", orderedProductIds);
+            setResult(RESULT_OK, resultIntent);
+
+            new android.app.AlertDialog.Builder(this)
+                    .setTitle("Đặt hàng thành công 🎉")
+                    .setMessage(message)
+                    .setPositiveButton("Xem lịch sử", (dialog, which) -> {
+                        finish();
+                    })
+                    .setNegativeButton("Về trang chủ", (dialog, which) -> {
+                        finish();
+                    })
+                    .show();
+        });
+
+        orderviewModel.getErrorLiveData().observe(this, error -> {
+            Toast.makeText(this, "❌ " + error, Toast.LENGTH_SHORT).show();
+        });
+
+
 
         // Nhận dữ liệu từ Intent
         selectedItems = (ArrayList<Item>) getIntent().getSerializableExtra("selectedItems");
@@ -71,10 +105,36 @@ public class ConfirmOrderActivity extends AppCompatActivity {
                 return;
             }
 
+            // Convert Item -> OrderItem
+            List<OrderItem> orderItems = new ArrayList<>();
+            for (Item item : selectedItems) {
+                OrderItem orderItem = new OrderItem();
+                orderItem.setProductId(item.getProductId());
+                orderItem.setProductName(item.getProductName());
+                orderItem.setQuantity(item.getQuantity());
+                orderItem.setSize(item.getSize());
+                orderItem.setPrice(item.getPrice());
+                orderItems.add(orderItem);
+            }
 
-            Toast.makeText(this, "Xác nhận đơn hàng thành công!", Toast.LENGTH_SHORT).show();
-            finish(); // hoặc chuyển sang trang thành công
+            // Tính tổng tiền
+            double totalPrice = 0;
+            for (OrderItem item : orderItems) {
+                totalPrice += item.getPrice() * item.getQuantity();
+            }
+
+            // Tạo đơn hàng
+            Order order = new Order();
+            order.setEmail(email);
+            order.setPhonenumber(phoneNumber);
+            order.setAddress(address);
+            order.setTotalPrice(totalPrice);
+            order.setItems(orderItems);
+
+            // Gọi API tạo đơn hàng
+            orderviewModel.createOrder(order);
         });
+
     }
 }
 

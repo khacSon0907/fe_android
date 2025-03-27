@@ -3,6 +3,7 @@ package com.example.myapplication.api;
 import com.example.myapplication.model.Cart;
 import com.example.myapplication.model.Item;
 import com.example.myapplication.model.LoginRequest;
+import com.example.myapplication.model.Order;
 import com.example.myapplication.model.ProductAdmin;
 import com.example.myapplication.model.RegisterRequest;
 import com.example.myapplication.respone.ResponLogin;
@@ -27,6 +28,12 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface ApiService {
+
+
+    @POST("/api/orders/create")
+    Call<ResponseWrapper<Order>> createOrder(@Body Order order);
+
+
     @POST("api/register") // Thay "api/register" bằng endpoint thực tế của bạn
     Call<Map<String, Object>> registerUser(@Body RegisterRequest request);
 
