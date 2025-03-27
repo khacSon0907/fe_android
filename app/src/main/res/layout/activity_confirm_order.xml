@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/white" />
+    <!-- Tiêu đề nằm đầu trang -->
+    <TextView
+        android:id="@+id/textOrder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#8C8B8B"
+        android:padding="12dp"
+        android:text="XÁC NHẬN ĐẶT HÀNG"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <!-- Danh sách sản phẩm đã chọn -->
+    <ListView
+        android:id="@+id/listViewSelectedItems"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_marginTop="8dp" />
+
+    <!-- Số điện thoại -->
+    <EditText
+        android:id="@+id/editPhone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:hint="Số điện thoại"
+        android:inputType="phone" />
+
+    <!-- Địa chỉ giao hàng -->
+    <EditText
+        android:id="@+id/editAddress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:hint="Địa chỉ giao hàng" />
+
+    <!-- Tổng tiền -->
+    <TextView
+        android:id="@+id/textTotalPrice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="Tổng tiền: 0 Đ"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <!-- Nút xác nhận -->
+    <Button
+        android:id="@+id/btnConfirmOrder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:backgroundTint="#000"
+        android:text="Xác nhận đặt hàng"
+        android:textColor="#fff" />
+
+    <Button
+        android:id="@+id/btnReturn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:backgroundTint="#000"
+        android:text="Quay lại giỏ hàng"
+        android:textColor="#fff" />
+</LinearLayout>

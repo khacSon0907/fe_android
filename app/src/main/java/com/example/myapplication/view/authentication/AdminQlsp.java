@@ -31,7 +31,13 @@ public class AdminQlsp extends AppCompatActivity implements ProductAdapter.OnPro
         setContentView(R.layout.admin_qlsp);
 
         ImageView btnBack = findViewById(R.id.btnBack);
-        btnBack.setOnClickListener(v -> onBackPressed());
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AdminQlsp.this,Admin.class);
+                startActivity(intent);
+            }
+        });
 
         recyclerView = findViewById(R.id.listviewProduct);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));

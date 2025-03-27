@@ -1,11 +1,12 @@
 package com.example.myapplication.model;
 
 
-public class Item {
+import java.io.Serializable;
+
+public class Item implements Serializable {
     private String productId;
     private String productName;
     private int quantity;
-
     private boolean selected = false;
     public boolean isSelected() {
         return selected;
@@ -35,7 +36,6 @@ public class Item {
         this.price = price;
     }
 
-    // ✅ Constructor đầy đủ
     public Item(String productId, String productName, int quantity, double price, String size, String imageUrl) {
         this.productId = productId;
         this.productName = productName;

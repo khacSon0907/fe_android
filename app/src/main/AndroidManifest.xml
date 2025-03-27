@@ -43,10 +43,11 @@
         <activity
             android:name=".view.authentication.AddProductActivity"
             android:exported="false" />
-        <activity android:name=".view.home.CartActivity"
+        <activity android:name=".view.cart.CartActivity"
             android:exported="false" />
         <activity android:name=".view.home.ProductDetailActivity"
             android:exported="false" />
-
+        <activity android:name=".view.cart.ConfirmOrderActivity"
+            android:exported="false" />
     </application>
 </manifest>

@@ -1,5 +1,6 @@
-package com.example.myapplication.view.home;
+package com.example.myapplication.view.cart;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
@@ -16,17 +17,21 @@ import com.example.myapplication.model.Item;
 import com.example.myapplication.view.customAdapter.CartAdapter;
 import com.example.myapplication.viewmodel.AuthViewModel;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
 public class CartActivity extends AppCompatActivity {
 
     private ListView listViewCart;
     private TextView textViewTotal;
-    private Button buttonCheckout, buttonContinueShopping;
+    private Button btnOrder, buttonContinueShopping;
 
     private CartAdapter cartAdapter;
     private AuthViewModel authViewModel;
     private String email;
+    private String currentPhoneNumber = "";
+
+    private ArrayList<Item> selectedItems = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,9 +40,8 @@ public class CartActivity extends AppCompatActivity {
 
         listViewCart = findViewById(R.id.listviewcart);
         textViewTotal = findViewById(R.id.textview_giatri);
-        buttonCheckout = findViewById(R.id.btnOrder);
         buttonContinueShopping = findViewById(R.id.buttontieptucmuahang);
-
+        btnOrder = findViewById(R.id.btnOrder);
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
 
         SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
@@ -49,6 +53,14 @@ public class CartActivity extends AppCompatActivity {
             return;
         }
 
+
+        authViewModel.getUserbyEmail(email);
+
+        authViewModel.getUserLiveData().observe(this, user -> {
+            if (user != null) {
+                currentPhoneNumber = user.getPhonenumber(); // ⬅ Lưu lại sdt
+            }
+        });
         // Lắng nghe dữ liệu giỏ hàng từ ViewModel
         authViewModel.getCart(email);
         authViewModel.getCartLiveData().observe(this, cart -> {
@@ -85,6 +97,35 @@ public class CartActivity extends AppCompatActivity {
 
 
         buttonContinueShopping.setOnClickListener(v -> finish());
+
+        btnOrder.setOnClickListener(v -> {
+            Cart cart = authViewModel.getCartLiveData().getValue();
+
+            if (cart == null || cart.getItems() == null) return;
+
+            selectedItems.clear(); // Xóa dữ liệu cũ
+
+            for (Item item : cart.getItems()) {
+                if (item.isSelected()) {
+                    selectedItems.add(item);
+                }
+            }
+
+            if (selectedItems.isEmpty()) {
+                new androidx.appcompat.app.AlertDialog.Builder(this)
+                        .setTitle("Thông báo")
+                        .setMessage("Vui lòng chọn ít nhất một sản phẩm để đặt hàng.")
+                        .setPositiveButton("OK", null)
+                        .show();
+            } else {
+                Intent intent = new Intent(CartActivity.this, ConfirmOrderActivity.class);
+                intent.putExtra("selectedItems", new ArrayList<>(selectedItems));
+                intent.putExtra("email", email);
+                intent.putExtra("phonenumber", currentPhoneNumber); // lấy từ user
+                startActivity(intent);
+            }
+        });
+
     }
 
     // ✅ Cập nhật lại tổng tiền khi checkbox thay đổi

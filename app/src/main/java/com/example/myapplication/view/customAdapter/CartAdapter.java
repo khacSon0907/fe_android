@@ -16,10 +16,13 @@ import com.bumptech.glide.Glide;
 import com.example.myapplication.R;
 import com.example.myapplication.model.Cart;
 import com.example.myapplication.model.Item;
+import com.example.myapplication.view.cart.CartActivity;
 import com.example.myapplication.viewmodel.AuthViewModel;
 
 import java.text.DecimalFormat;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CartAdapter extends BaseAdapter {
     private final Context context;
@@ -34,8 +37,21 @@ public class CartAdapter extends BaseAdapter {
         this.email = email;
     }
     public void updateCart(Cart cart) {
+        // ✅ Lưu lại trạng thái checkbox đang chọn
+        Map<String, Boolean> selectionMap = new HashMap<>();
+        for (Item item : this.itemList) {
+            String key = item.getProductId() + "_" + item.getSize();
+            selectionMap.put(key, item.isSelected());
+        }
+
+        // ✅ Cập nhật lại danh sách mới
         this.itemList.clear();
-        this.itemList.addAll(cart.getItems());
+        for (Item newItem : cart.getItems()) {
+            String key = newItem.getProductId() + "_" + newItem.getSize();
+            newItem.setSelected(selectionMap.getOrDefault(key, false)); // giữ lại trạng thái checkbox
+            this.itemList.add(newItem);
+        }
+
         notifyDataSetChanged();
     }
 
@@ -118,8 +134,8 @@ public class CartAdapter extends BaseAdapter {
         // Xử lý sự kiện chọn checkbox
         holder.cboxSelect.setOnCheckedChangeListener((buttonView, isChecked) -> {
             item.setSelected(isChecked);
-            if (context instanceof com.example.myapplication.view.home.CartActivity) {
-                ((com.example.myapplication.view.home.CartActivity) context).recalculateTotal();
+            if (context instanceof CartActivity) {
+                ((CartActivity) context).recalculateTotal();
             }
         });
 

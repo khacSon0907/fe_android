@@ -19,7 +19,7 @@ import com.example.myapplication.R;
 import com.example.myapplication.model.Photo;
 import com.example.myapplication.model.PhotoViewPager2Adapter;
 import com.example.myapplication.model.ProductAdmin;
-import com.example.myapplication.view.home.CartActivity;
+import com.example.myapplication.view.cart.CartActivity;
 import com.example.myapplication.view.customAdapter.UserProductAdapter;
 import com.example.myapplication.viewmodel.ProductViewModel;
 
