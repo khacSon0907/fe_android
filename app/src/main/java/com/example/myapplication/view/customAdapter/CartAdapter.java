@@ -1,3 +1,5 @@
+// ✅ File 1: CartAdapter.java (Đã xử lý checkbox hoàn chỉnh để chọn sản phẩm tính tiền)
+
 package com.example.myapplication.view.customAdapter;
 
 import android.content.Context;
@@ -6,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -50,6 +53,7 @@ public class CartAdapter extends BaseAdapter {
         TextView txtTen, txtGia, txtSoLuong;
         ImageView img;
         Button btnPlus, btnMinus, btnDelete;
+        CheckBox cboxSelect;
     }
 
     @Override
@@ -65,18 +69,13 @@ public class CartAdapter extends BaseAdapter {
             holder.btnMinus = convertView.findViewById(R.id.buttonminus);
             holder.btnPlus = convertView.findViewById(R.id.buttonplus);
             holder.btnDelete = convertView.findViewById(R.id.btnDeleteCart);
+            holder.cboxSelect = convertView.findViewById(R.id.checkboxSelect);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
-
         Item item = itemList.get(position);
-
-        holder.btnDelete.setOnClickListener(v -> {
-            authViewModel.deleteCartItem(email, item.getProductId(), item.getSize());
-            // KHÔNG xoá local, đợi LiveData cập nhật lại từ backend
-        });
 
         holder.txtTen.setText(item.getProductName());
         holder.txtSoLuong.setText(String.valueOf(item.getQuantity()));
@@ -84,7 +83,6 @@ public class CartAdapter extends BaseAdapter {
         DecimalFormat formatter = new DecimalFormat("#,###");
         holder.txtGia.setText(formatter.format(item.getPrice()) + " Đ");
 
-        // Load ảnh
         if (item.getImageUrl() != null && !item.getImageUrl().isEmpty()) {
             String fullImageUrl = "http://10.0.2.2:8080" + item.getImageUrl();
             Glide.with(context)
@@ -96,21 +94,29 @@ public class CartAdapter extends BaseAdapter {
             holder.img.setImageResource(R.drawable.product1);
         }
 
-        // Tăng số lượng
-        holder.btnPlus.setOnClickListener(v -> {
-            item.setQuantity(item.getQuantity() + 1);
-            notifyDataSetChanged();
+        holder.btnDelete.setOnClickListener(v -> {
+            authViewModel.deleteCartItem(email, item.getProductId(), item.getSize());
         });
 
-        // Giảm số lượng
+        holder.btnPlus.setOnClickListener(v -> {
+            authViewModel.increaseQuantity(email, item.getProductId(), item.getSize());
+        });
+
+        holder.btnMinus.setEnabled(item.getQuantity() > 1);
         holder.btnMinus.setOnClickListener(v -> {
-            if (item.getQuantity() > 1) {
-                item.setQuantity(item.getQuantity() - 1);
-                notifyDataSetChanged();
+            authViewModel.decreaseQuantity(email, item.getProductId(), item.getSize());
+        });
+
+        // Hiển thị trạng thái checkbox
+        holder.cboxSelect.setChecked(item.isSelected());
+
+        // Xử lý sự kiện chọn checkbox
+        holder.cboxSelect.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            item.setSelected(isChecked);
+            if (context instanceof com.example.myapplication.view.home.CartActivity) {
+                ((com.example.myapplication.view.home.CartActivity) context).recalculateTotal();
             }
         });
-
-
 
         return convertView;
     }

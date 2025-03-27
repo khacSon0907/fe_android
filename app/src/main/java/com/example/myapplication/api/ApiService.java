@@ -19,6 +19,7 @@ import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Multipart;
+import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Part;
@@ -75,5 +76,18 @@ public interface ApiService {
             @Query("size") String size
     );
 
+
+    @PATCH("api/cart/increase")
+    Call<ResponseWrapper<Void>> increaseQuantity(
+            @Query("email") String email,
+            @Query("productId") String productId,
+            @Query("size") String size
+    );
+    @PATCH("api/cart/decrease")
+    Call<ResponseWrapper<Void>> decreaseQuantity(
+            @Query("email") String email,
+            @Query("productId") String productId,
+            @Query("size") String size
+    );
 
 }

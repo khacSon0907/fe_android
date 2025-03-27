@@ -259,4 +259,49 @@ public class AuthViewModel extends AndroidViewModel {
         });
     }
 
+    public void increaseQuantity(String email, String productId, String size) {
+        ApiService api = ApiClient.getClient().create(ApiService.class);
+        Call<ResponseWrapper<Void>> call = api.increaseQuantity(email, productId, size);
+
+        call.enqueue(new Callback<ResponseWrapper<Void>>() {
+            @Override
+            public void onResponse(Call<ResponseWrapper<Void>> call, Response<ResponseWrapper<Void>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    successLiveData.setValue(response.body().getMessage());
+                    getCart(email); // Cập nhật giỏ hàng sau khi tăng
+                } else {
+                    errorLiveData.setValue("Tăng số lượng thất bại");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseWrapper<Void>> call, Throwable t) {
+                errorLiveData.setValue("Lỗi mạng khi tăng số lượng: " + t.getMessage());
+            }
+        });
+    }
+
+    public void decreaseQuantity(String email, String productId, String size) {
+        ApiService api = ApiClient.getClient().create(ApiService.class);
+        Call<ResponseWrapper<Void>> call = api.decreaseQuantity(email, productId, size);
+
+        call.enqueue(new Callback<ResponseWrapper<Void>>() {
+            @Override
+            public void onResponse(Call<ResponseWrapper<Void>> call, Response<ResponseWrapper<Void>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    successLiveData.setValue(response.body().getMessage());
+                    getCart(email); // Cập nhật giỏ hàng sau khi giảm
+                } else {
+                    errorLiveData.setValue("Giảm số lượng thất bại");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseWrapper<Void>> call, Throwable t) {
+                errorLiveData.setValue("Lỗi mạng khi giảm số lượng: " + t.getMessage());
+            }
+        });
+    }
+
+
 }

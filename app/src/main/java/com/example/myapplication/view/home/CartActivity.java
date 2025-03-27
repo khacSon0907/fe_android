@@ -16,6 +16,8 @@ import com.example.myapplication.model.Item;
 import com.example.myapplication.view.customAdapter.CartAdapter;
 import com.example.myapplication.viewmodel.AuthViewModel;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public class CartActivity extends AppCompatActivity {
@@ -55,8 +57,9 @@ public class CartActivity extends AppCompatActivity {
             if (cart != null && !cart.getItems().isEmpty()) {
                 cartAdapter = new CartAdapter(this, cart, authViewModel, email);
                 listViewCart.setAdapter(cartAdapter);
-                updateTotalPrice(cart);
+                recalculateTotal(); // 👈 Dùng đúng hàm tổng tiền khi load dữ liệu
             } else {
+                textViewTotal.setText("0 Đ");
                 Toast.makeText(this, "Giỏ hàng trống", Toast.LENGTH_SHORT).show();
             }
         });
@@ -65,7 +68,7 @@ public class CartActivity extends AppCompatActivity {
         authViewModel.getSuccessLiveData().observe(this, message -> {
             if (message != null && !message.isEmpty()) {
                 Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-                authViewModel.getCart(email); // Reload cart sau khi xoá
+                authViewModel.getCart(email); // Reload cart sau khi thao tác
             }
         });
 
@@ -76,18 +79,24 @@ public class CartActivity extends AppCompatActivity {
             }
         });
 
-        buttonCheckout.setOnClickListener(v -> {
-            Toast.makeText(this, "Tính năng thanh toán chưa hỗ trợ", Toast.LENGTH_SHORT).show();
-        });
 
         buttonContinueShopping.setOnClickListener(v -> finish());
     }
 
-    private void updateTotalPrice(Cart cart) {
+    // ✅ Cập nhật lại tổng tiền khi checkbox thay đổi
+    public void recalculateTotal() {
+        Cart cart = authViewModel.getCartLiveData().getValue();
+        if (cart == null || cart.getItems() == null) return;
+
         double total = 0;
         for (Item item : cart.getItems()) {
-            total += item.getPrice() * item.getQuantity();
+            if (item.isSelected()) {
+                total += item.getPrice() * item.getQuantity();
+            }
         }
+
         textViewTotal.setText(String.format(Locale.getDefault(), "%,.0f Đ", total));
     }
+
+
 }
