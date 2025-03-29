@@ -10,6 +10,8 @@ import android.widget.Toast;
 import androidx.appcompat.widget.Toolbar; // Import đúng
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -44,10 +46,16 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
+
+
         Toolbar toolbar = view.findViewById(R.id.toolBar);
         toolbar.setOnMenuItemClickListener(item -> {
             if (item.getItemId() == R.id.menu_cart) {
                 startActivity(new Intent(getActivity(), CartActivity.class));
+                return true;
+            }
+            if (item.getItemId() == R.id.menu_profile) {
+                loadFragment(new ProfileFragment());
                 return true;
             }
             return false;
@@ -92,6 +100,12 @@ public class HomeFragment extends Fragment {
         list.add(new Photo(R.drawable.img_3));
         list.add(new Photo(R.drawable.img_4));
         return list;
+    }
+    private void loadFragment(Fragment fragment) {
+        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, fragment); // nhớ thay đúng ID container
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 }
 

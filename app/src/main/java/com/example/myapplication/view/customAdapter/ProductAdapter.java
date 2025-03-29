@@ -9,13 +9,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.myapplication.R;
 import com.example.myapplication.model.ProductAdmin;
-import com.example.myapplication.view.authentication.AddProductActivity;
+import com.example.myapplication.view.admin.AddProductActivity;
 
 import java.util.List;
 import java.text.DecimalFormat;

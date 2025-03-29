@@ -1,4 +1,4 @@
-package com.example.myapplication.view.authentication;
+package com.example.myapplication.view.admin;
 
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;

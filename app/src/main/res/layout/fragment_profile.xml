@@ -185,12 +185,12 @@
             app:cornerRadius="10dp"/>
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnVoucher"
+            android:id="@+id/btnHoaDon"
             android:layout_width="0dp"
             android:layout_height="100dp"
             android:layout_weight="1"
-            android:text="Mã giảm giá"
-            android:drawableTop="@drawable/ic_voucher"
+            android:text="Hoá Đơn"
+            android:drawableTop="@drawable/receipt"
             android:textSize="14sp"
             android:backgroundTint="@color/black"
             android:textColor="@android:color/white"

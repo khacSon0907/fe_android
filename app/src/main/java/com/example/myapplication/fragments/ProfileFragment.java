@@ -23,10 +23,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.R;
 import com.example.myapplication.model.ProfileOption;
-import com.example.myapplication.view.authentication.Admin;
+import com.example.myapplication.view.admin.Admin;
 import com.example.myapplication.view.customAdapter.ProfileAdapter;
 import com.example.myapplication.view.authentication.Login;
 import com.example.myapplication.view.authentication.Register;
+import com.example.myapplication.view.receipt.ReceiptActivity;
 import com.example.myapplication.viewmodel.AuthViewModel;
 
 import java.util.ArrayList;
@@ -39,7 +40,7 @@ public class ProfileFragment extends Fragment {
     private ProfileAdapter adapter;
     private List<ProfileOption> options;
 
-    private Button btn_login, btn_register, btnLogout,btnUpgradeVIP,btn_nextAdmin;
+    private Button btn_login, btn_register, btnLogout,btnUpgradeVIP,btn_nextAdmin,btnHoaDon;
     private TextView tvUserEmail, tvUserName;
 
     private LinearLayout layoutAuth ,quick_buttons;
@@ -61,6 +62,7 @@ public class ProfileFragment extends Fragment {
         layoutAuth = view.findViewById(R.id.layoutAuth);
         btnUpgradeVIP = view.findViewById(R.id.btnUpgradeVIP);
         quick_buttons = view.findViewById(R.id.quick_buttons);
+        btnHoaDon = view.findViewById(R.id.btnHoaDon);
 // Nếu bạn muốn hiển thị thông tin người dùng
 
         tvUserEmail = view.findViewById(R.id.tvUserEmail);
@@ -79,14 +81,19 @@ public class ProfileFragment extends Fragment {
                 // Xử lý khi item được nhấn
             }
         });
-
-
         recyclerView.setAdapter(adapter);
-
         btn_register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(requireContext(), Register.class);
+                startActivity(intent);
+            }
+        });
+
+        btnHoaDon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(requireContext(), ReceiptActivity.class);
                 startActivity(intent);
             }
         });

@@ -30,6 +30,9 @@ import retrofit2.http.Query;
 public interface ApiService {
 
 
+    @GET("/api/orders")
+    Call<ResponseWrapper<List<Order>>> getReceiptsByEmail(@Query("email") String email);
+
     @POST("/api/orders/create")
     Call<ResponseWrapper<Order>> createOrder(@Body Order order);
 

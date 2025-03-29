@@ -22,6 +22,7 @@ import com.example.myapplication.model.ProductAdmin;
 import com.example.myapplication.view.cart.CartActivity;
 import com.example.myapplication.viewmodel.AuthViewModel;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -67,7 +68,9 @@ public class ProductDetailActivity extends AppCompatActivity {
         );
 
         productName.setText(product.getName());
-        productPrice.setText(product.getPrice() + " VNĐ");
+
+        DecimalFormat formatter = new DecimalFormat("#,###");
+        productPrice.setText(formatter.format( product.getPrice()) + " VNĐ");
         productDescription.setText(product.getDescription());
         productCategory.setText("Loại: " + product.getCategory());
         productBrand.setText("Hãng: " + product.getBrand());
@@ -119,6 +122,8 @@ public class ProductDetailActivity extends AppCompatActivity {
                 }
             });
 
+            Intent intent1 = new Intent(ProductDetailActivity.this,CartActivity.class);
+            startActivity(intent1);
         });
     }
 

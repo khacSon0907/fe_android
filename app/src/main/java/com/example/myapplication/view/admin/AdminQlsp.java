@@ -1,4 +1,4 @@
-package com.example.myapplication.view.authentication;
+package com.example.myapplication.view.admin;
 
 
 import android.content.Intent;
@@ -34,7 +34,7 @@ public class AdminQlsp extends AppCompatActivity implements ProductAdapter.OnPro
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(AdminQlsp.this,Admin.class);
+                Intent intent = new Intent(AdminQlsp.this, Admin.class);
                 startActivity(intent);
             }
         });

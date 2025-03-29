@@ -1,5 +1,6 @@
 package com.example.myapplication.view.cart;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -8,6 +9,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.myapplication.R;
 import com.example.myapplication.model.Item;
 import com.example.myapplication.view.customAdapter.SelectedItemAdapter;
+import com.example.myapplication.view.home.MainActivity;
+import com.example.myapplication.view.receipt.ReceiptActivity;
 import com.example.myapplication.viewmodel.AuthViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import com.example.myapplication.model.OrderItem;
@@ -59,14 +62,16 @@ public class ConfirmOrderActivity extends AppCompatActivity {
             resultIntent.putStringArrayListExtra("orderedProductIds", orderedProductIds);
             setResult(RESULT_OK, resultIntent);
 
-            new android.app.AlertDialog.Builder(this)
+            new AlertDialog.Builder(this)
                     .setTitle("Đặt hàng thành công 🎉")
                     .setMessage(message)
                     .setPositiveButton("Xem lịch sử", (dialog, which) -> {
-                        finish();
+                        Intent intent = new Intent(ConfirmOrderActivity.this, ReceiptActivity.class);
+                        startActivity(intent);
                     })
                     .setNegativeButton("Về trang chủ", (dialog, which) -> {
-                        finish();
+                        Intent intent = new Intent(ConfirmOrderActivity.this, MainActivity.class);
+                        startActivity(intent);
                     })
                     .show();
         });

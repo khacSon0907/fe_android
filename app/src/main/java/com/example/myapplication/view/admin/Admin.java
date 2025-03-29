@@ -1,4 +1,4 @@
-package com.example.myapplication.view.authentication;
+package com.example.myapplication.view.admin;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.myapplication.R;
+import com.example.myapplication.view.authentication.Login;
 import com.example.myapplication.view.home.MainActivity;
 
 import java.util.ArrayList;

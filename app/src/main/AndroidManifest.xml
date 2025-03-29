@@ -34,20 +34,22 @@
             android:name=".view.authentication.Login"
             android:exported="false" />
         <activity
-            android:name=".view.authentication.Admin"
+            android:name=".view.admin.Admin"
             android:exported="false" />
         <activity
-            android:name=".view.authentication.AdminQlsp"
+            android:name=".view.admin.AdminQlsp"
             android:exported="false"
             />
         <activity
-            android:name=".view.authentication.AddProductActivity"
+            android:name=".view.admin.AddProductActivity"
             android:exported="false" />
         <activity android:name=".view.cart.CartActivity"
             android:exported="false" />
         <activity android:name=".view.home.ProductDetailActivity"
             android:exported="false" />
         <activity android:name=".view.cart.ConfirmOrderActivity"
+            android:exported="false" />
+        <activity android:name=".view.receipt.ReceiptActivity"
             android:exported="false" />
     </application>
 </manifest>
