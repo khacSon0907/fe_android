@@ -58,7 +58,7 @@
         >
 
         <Button
-            android:id="@+id/btnDetailReceipt"
+            android:id="@+id/btnViewDetail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"

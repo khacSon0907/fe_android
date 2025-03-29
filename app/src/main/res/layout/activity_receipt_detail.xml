@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Tiêu đề -->
+    <TextView
+        android:layout_marginTop="50dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Chi tiết hóa đơn"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:layout_marginBottom="12dp" />
+
+    <!-- Header bảng -->
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:stretchColumns="0,1,2,3">
+
+        <TableRow>
+
+            <TextView
+                android:text="Tên SP"
+                android:background="@drawable/border_cell"
+                android:padding="8dp"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:layout_width="0dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:text="Size"
+                android:background="@drawable/border_cell"
+                android:padding="8dp"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:layout_width="0dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:text="SL"
+                android:background="@drawable/border_cell"
+                android:padding="8dp"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:layout_width="0dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:text="Giá"
+                android:background="@drawable/border_cell"
+                android:padding="8dp"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:layout_width="0dp"
+                android:layout_weight="1" />
+        </TableRow>
+
+        <!-- Nội dung sẽ thêm động bằng code -->
+        <TableLayout
+            android:id="@+id/tableContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="0,1,2,3"
+            android:layout_marginTop="4dp" />
+    </TableLayout>
+
+    <!-- Tổng tiền -->
+    <TextView
+        android:id="@+id/tvTotalPrice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Tổng cộng: ..."
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:gravity="end"
+        android:layout_marginTop="12dp"/>
+</LinearLayout>

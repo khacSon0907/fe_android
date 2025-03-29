@@ -19,6 +19,7 @@ import com.example.myapplication.model.Order;
 import com.example.myapplication.view.customAdapter.ReceiptAdapter;
 import com.example.myapplication.view.home.MainActivity;
 import com.example.myapplication.viewmodel.OrderviewModel;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,11 +55,15 @@ public class ReceiptActivity extends AppCompatActivity {
             @Override
             public void onOrderClick(Order order) {
                 // Sẽ làm sau: mở ReceiptDetailActivity
+                Intent intent = new Intent(ReceiptActivity.this, ReceiptDetailActivity.class);
+                intent.putExtra("order_json", new Gson().toJson(order));
+                startActivity(intent);
             }
 
             @Override
             public void onCancelOrderClick(String orderId) {
                 // Giả lập xoá đơn (có thể gọi API ở đây)
+
                 Toast.makeText(ReceiptActivity.this, "Đã hủy đơn " + orderId, Toast.LENGTH_SHORT).show();
             }
         });

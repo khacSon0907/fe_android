@@ -69,6 +69,9 @@ public class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.OrderVie
         holder.itemView.setOnClickListener(v -> {
             listener.onOrderClick(order);
         });
+        holder.btnViewDetail.setOnClickListener(v -> {
+            listener.onOrderClick(order);
+        });
     }
 
     @Override
@@ -78,7 +81,7 @@ public class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.OrderVie
 
     public static class OrderViewHolder extends RecyclerView.ViewHolder {
         TextView txtDate, txtStatus, txtPhone, txtAddress, txtTotal;
-        Button btnCancel;
+        Button btnCancel, btnViewDetail;
 
         public OrderViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -88,6 +91,7 @@ public class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.OrderVie
             txtAddress = itemView.findViewById(R.id.txtAddress);
             txtTotal = itemView.findViewById(R.id.txtTotal);
             btnCancel = itemView.findViewById(R.id.btnCancel);
+            btnViewDetail = itemView.findViewById(R.id.btnViewDetail);
         }
     }
     public void updateData(List<Order> newOrders) {
