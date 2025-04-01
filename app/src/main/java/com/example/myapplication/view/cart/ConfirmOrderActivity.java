@@ -2,7 +2,6 @@ package com.example.myapplication.view.cart;
 
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,9 +16,7 @@ import com.example.myapplication.model.OrderItem;
 import com.example.myapplication.model.Order;
 import com.example.myapplication.viewmodel.OrderviewModel;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -28,8 +25,7 @@ public class ConfirmOrderActivity extends AppCompatActivity {
     private ListView listViewSelected;
     private EditText editPhone, editAddress;
     private TextView textTotal;
-
-    private Button btnConfirm,btnReturn;
+    private Button btnConfirm, btnReturn;
 
     private List<Item> selectedItems;
     private String email;
@@ -48,39 +44,9 @@ public class ConfirmOrderActivity extends AppCompatActivity {
         btnReturn = findViewById(R.id.btnReturn);
 
         btnReturn.setOnClickListener(v -> finish());
+
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
-
         OrderviewModel orderviewModel = new ViewModelProvider(this).get(OrderviewModel.class);
-
-        orderviewModel.getMessageLiveData().observe(this, message -> {
-
-            Intent resultIntent = new Intent();
-            ArrayList<String> orderedProductIds = new ArrayList<>();
-            for (Item item : selectedItems) {
-                orderedProductIds.add(item.getProductId());
-            }
-            resultIntent.putStringArrayListExtra("orderedProductIds", orderedProductIds);
-            setResult(RESULT_OK, resultIntent);
-
-            new AlertDialog.Builder(this)
-                    .setTitle("Đặt hàng thành công 🎉")
-                    .setMessage(message)
-                    .setPositiveButton("Xem lịch sử", (dialog, which) -> {
-                        Intent intent = new Intent(ConfirmOrderActivity.this, ReceiptActivity.class);
-                        startActivity(intent);
-                    })
-                    .setNegativeButton("Về trang chủ", (dialog, which) -> {
-                        Intent intent = new Intent(ConfirmOrderActivity.this, MainActivity.class);
-                        startActivity(intent);
-                    })
-                    .show();
-        });
-
-        orderviewModel.getErrorLiveData().observe(this, error -> {
-            Toast.makeText(this, "❌ " + error, Toast.LENGTH_SHORT).show();
-        });
-
-
 
         // Nhận dữ liệu từ Intent
         selectedItems = (ArrayList<Item>) getIntent().getSerializableExtra("selectedItems");
@@ -89,17 +55,53 @@ public class ConfirmOrderActivity extends AppCompatActivity {
 
         if (phone != null) editPhone.setText(phone);
 
-        // Hiển thị sản phẩm
         SelectedItemAdapter adapter = new SelectedItemAdapter(this, selectedItems);
         listViewSelected.setAdapter(adapter);
 
-        // Tính tổng tiền
         double total = 0;
         for (Item item : selectedItems) {
             total += item.getPrice() * item.getQuantity();
         }
-
         textTotal.setText(String.format(Locale.getDefault(), "Tổng tiền: %,.0f Đ", total));
+
+        orderviewModel.getMessageLiveData().observe(this, message -> {
+            // ✅ Duyệt từng item và xóa cách nhau 300ms để tránh ghi đè LiveData
+            new Thread(() -> {
+                for (int i = 0; i < selectedItems.size(); i++) {
+                    Item item = selectedItems.get(i);
+                    runOnUiThread(() -> {
+                        authViewModel.deleteCartItem(email, item.getProductId(), item.getSize());
+                    });
+                    try {
+                        Thread.sleep(300); // ✅ Delay giữa mỗi lần xóa để tránh conflict backend
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                // ✅ Gọi lại getCart() để reload dữ liệu sau khi xóa hết
+                runOnUiThread(() -> {
+                    authViewModel.getCart(email);
+
+                    new AlertDialog.Builder(ConfirmOrderActivity.this)
+                            .setTitle("Đặt hàng thành công 🎉")
+                            .setMessage(message)
+                            .setPositiveButton("Xem lịch sử", (dialog, which) -> {
+                                startActivity(new Intent(ConfirmOrderActivity.this, ReceiptActivity.class));
+                                finish();
+                            })
+                            .setNegativeButton("Về trang chủ", (dialog, which) -> {
+                                startActivity(new Intent(ConfirmOrderActivity.this, MainActivity.class));
+                                finish();
+                            })
+                            .show();
+                });
+            }).start();
+        });
+
+        orderviewModel.getErrorLiveData().observe(this, error -> {
+            Toast.makeText(this, "❌ " + error, Toast.LENGTH_SHORT).show();
+        });
 
         btnConfirm.setOnClickListener(v -> {
             String address = editAddress.getText().toString().trim();
@@ -110,7 +112,6 @@ public class ConfirmOrderActivity extends AppCompatActivity {
                 return;
             }
 
-            // Convert Item -> OrderItem
             List<OrderItem> orderItems = new ArrayList<>();
             for (Item item : selectedItems) {
                 OrderItem orderItem = new OrderItem();
@@ -122,13 +123,11 @@ public class ConfirmOrderActivity extends AppCompatActivity {
                 orderItems.add(orderItem);
             }
 
-            // Tính tổng tiền
             double totalPrice = 0;
             for (OrderItem item : orderItems) {
                 totalPrice += item.getPrice() * item.getQuantity();
             }
 
-            // Tạo đơn hàng
             Order order = new Order();
             order.setEmail(email);
             order.setPhonenumber(phoneNumber);
@@ -136,10 +135,7 @@ public class ConfirmOrderActivity extends AppCompatActivity {
             order.setTotalPrice(totalPrice);
             order.setItems(orderItems);
 
-            // Gọi API tạo đơn hàng
             orderviewModel.createOrder(order);
         });
-
     }
 }
-

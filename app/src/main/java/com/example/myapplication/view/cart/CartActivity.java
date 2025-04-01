@@ -18,7 +18,6 @@ import com.example.myapplication.view.customAdapter.CartAdapter;
 import com.example.myapplication.viewmodel.AuthViewModel;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Locale;
 
 public class CartActivity extends AppCompatActivity {
@@ -31,7 +30,6 @@ public class CartActivity extends AppCompatActivity {
     private AuthViewModel authViewModel;
     private String email;
     private String currentPhoneNumber = "";
-
     private ArrayList<Item> selectedItems = new ArrayList<>();
 
     @Override
@@ -43,6 +41,7 @@ public class CartActivity extends AppCompatActivity {
         textViewTotal = findViewById(R.id.textview_giatri);
         buttonContinueShopping = findViewById(R.id.buttontieptucmuahang);
         btnOrder = findViewById(R.id.btnOrder);
+
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
 
         SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
@@ -54,15 +53,13 @@ public class CartActivity extends AppCompatActivity {
             return;
         }
 
-
         authViewModel.getUserbyEmail(email);
-
         authViewModel.getUserLiveData().observe(this, user -> {
             if (user != null) {
-                currentPhoneNumber = user.getPhonenumber(); // ⬅ Lưu lại sdt
+                currentPhoneNumber = user.getPhonenumber();
             }
         });
-        // Lắng nghe dữ liệu giỏ hàng từ ViewModel
+
         authViewModel.getCart(email);
         authViewModel.getCartLiveData().observe(this, cart -> {
             if (cart != null && !cart.getItems().isEmpty()) {
@@ -70,42 +67,29 @@ public class CartActivity extends AppCompatActivity {
                     cartAdapter = new CartAdapter(this, cart, authViewModel, email);
                     listViewCart.setAdapter(cartAdapter);
                 } else {
-                    // ✅ Cập nhật dữ liệu mới
-                    cartAdapter.updateCart(cart); // thêm hàm này
+                    cartAdapter.updateCart(cart);
                 }
                 recalculateTotal();
             } else {
                 textViewTotal.setText("0 Đ");
-                listViewCart.setAdapter(null); // clear UI nếu giỏ hàng rỗng
+                listViewCart.setAdapter(null);
                 Toast.makeText(this, "Giỏ hàng trống", Toast.LENGTH_SHORT).show();
             }
         });
 
-        // Lắng nghe thông báo thành công
         authViewModel.getSuccessLiveData().observe(this, message -> {
             if (message != null && !message.isEmpty()) {
-//                Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-                authViewModel.getCart(email); // Reload cart sau khi thao tác
+                authViewModel.getCart(email);
             }
         });
-
-        // Lắng nghe thông báo thất bại
-        authViewModel.getErrorLiveData().observe(this, message -> {
-            if (message != null && !message.isEmpty()) {
-//                Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-            }
-        });
-
 
         buttonContinueShopping.setOnClickListener(v -> finish());
 
         btnOrder.setOnClickListener(v -> {
             Cart cart = authViewModel.getCartLiveData().getValue();
-
             if (cart == null || cart.getItems() == null) return;
 
-            selectedItems.clear(); // Xóa dữ liệu cũ
-
+            selectedItems.clear();
             for (Item item : cart.getItems()) {
                 if (item.isSelected()) {
                     selectedItems.add(item);
@@ -122,15 +106,12 @@ public class CartActivity extends AppCompatActivity {
                 Intent intent = new Intent(CartActivity.this, ConfirmOrderActivity.class);
                 intent.putExtra("selectedItems", new ArrayList<>(selectedItems));
                 intent.putExtra("email", email);
-                intent.putExtra("phonenumber", currentPhoneNumber); // lấy từ user
-                startActivityForResult(intent, 100); // Quan trọng!
-
+                intent.putExtra("phonenumber", currentPhoneNumber);
+                startActivityForResult(intent, 100); // Không cần startActivityForResult nữa
             }
         });
-
     }
 
-    // ✅ Cập nhật lại tổng tiền khi checkbox thay đổi
     public void recalculateTotal() {
         Cart cart = authViewModel.getCartLiveData().getValue();
         if (cart == null || cart.getItems() == null) return;
@@ -143,26 +124,6 @@ public class CartActivity extends AppCompatActivity {
         }
 
         textViewTotal.setText(String.format(Locale.getDefault(), "%,.0f Đ", total));
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == 100 && resultCode == RESULT_OK && data != null) {
-            ArrayList<String> orderedProductIds = data.getStringArrayListExtra("orderedProductIds");
-
-            if (orderedProductIds != null && !orderedProductIds.isEmpty()) {
-                Cart cart = authViewModel.getCartLiveData().getValue();
-                if (cart == null || cart.getItems() == null) return;
-
-                for (Item item : cart.getItems()) {
-                    if (orderedProductIds.contains(item.getProductId())) {
-                        authViewModel.deleteCartItem(email, item.getProductId(), item.getSize());
-                    }
-                }
-            }
-        }
     }
 
 
